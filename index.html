@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10182b">
+<title>LearnSpark — Your learning space</title>
+<style>
+:root{
+  --bg:#f4f7fc;--surface:#fff;--surface-2:#f0f4fb;--text:#17233b;--muted:#697891;
+  --line:#e2e8f2;--primary:#4169e1;--primary-dark:#3154c8;--accent:#8b5cf6;
+  --shadow:0 12px 35px rgba(28,45,82,.08);--sidebar:260px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+body.dark{--bg:#0b1220;--surface:#121d30;--surface-2:#1a2940;--text:#edf3ff;--muted:#a4b2ca;--line:#293852;--shadow:0 12px 35px rgba(0,0,0,.22)}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+a{color:inherit}
+.app{min-height:100vh}
+.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sidebar);background:var(--surface);border-right:1px solid var(--line);padding:25px 17px;display:flex;flex-direction:column;z-index:20;transition:transform .25s}
+.brand{display:flex;align-items:center;gap:11px;padding:0 10px 27px;font-size:21px;font-weight:850;letter-spacing:-.7px}
+.brand-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--accent));display:grid;place-items:center;color:white;font-size:20px;box-shadow:0 7px 18px #4169e144}
+.brand span span{color:var(--primary)}
+.nav-label{font-size:10px;font-weight:800;letter-spacing:1.4px;color:var(--muted);padding:12px 12px 8px}
+.nav{display:grid;gap:5px}
+.nav button{width:100%;display:flex;align-items:center;gap:12px;border:0;background:transparent;color:var(--muted);padding:11px 13px;border-radius:11px;text-align:left;font-weight:650;transition:.18s}
+.nav button:hover{background:var(--surface-2);color:var(--text)}
+.nav button.active{background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary)}
+.nav .ico{width:22px;text-align:center;font-size:17px}
+.sidebar-bottom{margin-top:auto}
+.profile{display:flex;align-items:center;gap:10px;padding:14px 10px 2px;border-top:1px solid var(--line);margin-top:18px}
+.avatar{width:35px;height:35px;border-radius:50%;display:grid;place-items:center;background:#e8edff;color:#3657bd;font-weight:800}
+.profile strong{display:block;font-size:13px}.profile small{color:var(--muted);font-size:11px}
+.main-wrap{margin-left:var(--sidebar);min-height:100vh}
+.topbar{height:76px;background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 34px;position:sticky;top:0;z-index:10}
+.top-left{display:flex;align-items:center;gap:14px}.page-kicker{font-size:12px;color:var(--muted);font-weight:650}.page-title{font-size:17px;font-weight:800}
+.top-actions{display:flex;align-items:center;gap:10px}
+.icon-btn{width:40px;height:40px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text);font-size:17px}
+.menu-toggle{display:none}
+.content{max-width:1240px;margin:0 auto;padding:30px 34px 55px}
+.page{display:none}.page.active{display:block;animation:fade .2s ease}
+@keyframes fade{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:none}}
+.welcome{position:relative;overflow:hidden;border-radius:22px;padding:34px 36px;background:linear-gradient(115deg,#2447a8,#5b54cb 65%,#7656d9);color:#fff;box-shadow:var(--shadow)}
+.welcome:after{content:"✦";position:absolute;right:8%;top:-50px;font-size:210px;color:#ffffff12;transform:rotate(15deg)}
+.welcome .eyebrow{font-size:11px;font-weight:800;letter-spacing:1.7px;color:#d9e3ff}
+.welcome h1{font-size:clamp(28px,4vw,42px);line-height:1.12;letter-spacing:-1.4px;margin:10px 0}
+.welcome p{max-width:570px;color:#e2e8ff;margin:0 0 22px}
+.primary-btn,.secondary-btn,.soft-btn{border:0;border-radius:10px;padding:11px 16px;font-weight:750}
+.primary-btn{background:var(--primary);color:white}.welcome .primary-btn{background:#fff;color:#3455bd}
+.secondary-btn{background:var(--surface-2);color:var(--text);border:1px solid var(--line)}
+.soft-btn{background:color-mix(in srgb,var(--primary) 11%,transparent);color:var(--primary)}
+.primary-btn:hover,.secondary-btn:hover,.soft-btn:hover{filter:brightness(.96);transform:translateY(-1px)}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:15px;margin:27px 0 14px}
+.section-head h2{font-size:18px;margin:0;letter-spacing:-.3px}.section-head p{margin:3px 0 0;color:var(--muted);font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:20px}
+.stat-card,.card,.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.stat-card{padding:18px 20px;display:flex;align-items:center;gap:14px}
+.stat-icon{width:44px;height:44px;border-radius:13px;background:var(--surface-2);display:grid;place-items:center;font-size:20px}
+.stat-card small{display:block;color:var(--muted);font-weight:650}.stat-card strong{font-size:25px;letter-spacing:-.5px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.card{padding:19px;transition:.18s}.card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--primary) 45%,var(--line))}
+.card-icon{width:43px;height:43px;border-radius:13px;background:var(--surface-2);display:grid;place-items:center;font-size:21px;margin-bottom:13px}
+.card h3{font-size:15px;margin:0 0 5px}.card p{font-size:13px;color:var(--muted);margin:0 0 14px}
+.card-link{color:var(--primary);font-size:13px;font-weight:800;text-decoration:none}.card-link:hover{text-decoration:underline}
+.resource-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.resource-card{display:flex;flex-direction:column;min-height:190px}
+.resource-card .card-link{margin-top:auto;display:inline-flex;align-items:center;gap:6px}
+.resource-tag{font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--muted);margin-bottom:8px}
+.panel{padding:22px;margin-top:16px}
+.panel h2,.panel h3{margin-top:0}
+.muted{color:var(--muted)}.small{font-size:12px;color:var(--muted)}
+.progress{height:9px;border-radius:20px;background:var(--surface-2);overflow:hidden}.progress div{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:20px;transition:width .3s}
+.field{width:100%;padding:12px 13px;background:var(--bg);border:1px solid var(--line);border-radius:10px;color:var(--text);margin:7px 0 12px;outline:none}
+.field:focus{border-color:var(--primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 13%,transparent)}
+.answer{display:block;width:100%;text-align:left;margin:9px 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);color:var(--text);font-weight:650}
+.answer:hover{border-color:var(--primary)}.answer:disabled{opacity:.7;cursor:default}
+.flashcard{min-height:190px;display:grid;place-items:center;text-align:center;font-size:23px;font-weight:750;cursor:pointer;background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:25px;margin-bottom:14px}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.between{justify-content:space-between}
+.calc{max-width:390px}.calc-display{width:100%;font-size:30px;text-align:right;padding:19px;border-radius:13px;background:var(--bg);border:1px solid var(--line);color:var(--text);margin-bottom:12px}
+.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.calc-grid button{padding:16px 8px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);color:var(--text);font-size:17px;font-weight:750}.calc-grid button.operator{color:var(--primary)}.calc-grid button.equals{background:var(--primary);color:white}
+.setting-row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 0;border-bottom:1px solid var(--line)}.setting-row:last-child{border:0}
+.switch{width:48px;height:27px;border-radius:20px;background:#aab4c5;border:0;position:relative}.switch:after{content:"";position:absolute;width:19px;height:19px;border-radius:50%;background:white;left:4px;top:4px;transition:.2s}.switch.on{background:var(--primary)}.switch.on:after{left:25px}
+.empty-note{padding:18px;background:var(--surface-2);border-radius:12px;color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
+.overlay{display:none}
+@media(max-width:1000px){.grid,.resource-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){
+ :root{--sidebar:260px}
+ .sidebar{transform:translateX(-105%);box-shadow:var(--shadow)}
+ body.menu-open .sidebar{transform:translateX(0)}
+ .overlay{position:fixed;inset:0;background:#07102288;z-index:15}
+ body.menu-open .overlay{display:block}
+ .main-wrap{margin-left:0}.menu-toggle{display:inline-grid;place-items:center}
+ .topbar{height:66px;padding:0 16px}.content{padding:20px 16px 40px}
+ .welcome{padding:26px 22px}.stats{grid-template-columns:1fr}
+ .grid,.resource-grid{grid-template-columns:1fr}
+ .section-head{align-items:start;flex-direction:column}
+}
+@media(min-width:761px){.sidebar{transform:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" aria-label="Main navigation">
+    <div class="brand"><div class="brand-mark">✦</div><span>Learn<span>Spark</span></span></div>
+    <div class="nav-label">WORKSPACE</div>
+    <nav class="nav">
+      <button class="active" data-page="home"><span class="ico">⌂</span>Dashboard</button>
+      <button data-page="resources"><span class="ico">▦</span>App resources</button>
+      <button data-page="learning"><span class="ico">🎓</span>Learning center</button>
+      <button data-page="quiz"><span class="ico">✎</span>Quizzes</button>
+      <button data-page="cards"><span class="ico">▤</span>Flashcards</button>
+      <button data-page="calculator"><span class="ico">▦</span>Calculator</button>
+      <button data-page="assistant"><span class="ico">✧</span>Study assistant</button>
+      <button data-page="games"><span class="ico">♧</span>Study games</button>
+    </nav>
+    <div class="nav-label">PERSONAL</div>
+    <nav class="nav">
+      <button data-page="challenge"><span class="ico">⚡</span>Daily challenge</button>
+      <button data-page="settings"><span class="ico">⚙</span>Settings</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="profile"><div class="avatar">LS</div><div><strong>My learning space</strong><small>Keep making progress</small></div></div>
+    </div>
+  </aside>
+  <div class="overlay" onclick="closeMenu()"></div>
+  <div class="main-wrap">
+    <header class="topbar">
+      <div class="top-left">
+        <button class="icon-btn menu-toggle" onclick="toggleMenu()" aria-label="Open menu">☰</button>
+        <div><div class="page-kicker">LEARNING HUB</div><div class="page-title" id="pageTitle">Dashboard</div></div>
+      </div>
+      <div class="top-actions"><button class="icon-btn" onclick="showPage('settings')" title="Settings" aria-label="Settings">⚙</button></div>
+    </header>
+    <main class="content">
+      <section class="page active" id="home">
+        <div class="welcome">
+          <div class="eyebrow">YOUR PERSONAL LEARNING SPACE</div>
+          <h1>Make today a<br>great day to learn.</h1>
+          <p>Everything you need to stay organized, practice your skills, and make progress — all in one place.</p>
+          <button class="primary-btn" onclick="showPage('resources')">Explore your resources →</button>
+        </div>
+        <div class="stats">
+          <div class="stat-card"><div class="stat-icon">🏆</div><div><small>Activities completed</small><strong id="completed">0</strong></div></div>
+          <div class="stat-card"><div class="stat-icon">⭐</div><div><small>Total points</small><strong id="points">0</strong></div></div>
+          <div class="stat-card"><div class="stat-icon">🎯</div><div><small>Daily challenge</small><strong style="font-size:18px">Ready</strong></div></div>
+        </div>
+        <div class="panel">
+          <div class="row between"><div><h3 style="margin:0">Your learning progress</h3><p class="small" id="progressText">Complete activities to build your progress.</p></div><strong id="progressPercent">0%</strong></div>
+          <div class="progress"><div id="progressBar" style="width:0%"></div></div>
+        </div>
+        <div class="section-head"><div><h2>Quick access</h2><p>Jump back into your favorite learning tools.</p></div></div>
+        <div class="grid">
+          <div class="card"><div class="card-icon">▦</div><h3>School resources</h3><p>Open ClassLink, DeltaMath, Classroom, and more.</p><a class="card-link" href="#" onclick="showPage('resources');return false">View resources →</a></div>
+          <div class="card"><div class="card-icon">🎓</div><h3>Learning center</h3><p>Choose a subject, level, and activity that works for you.</p><a class="card-link" href="#" onclick="showPage('learning');return false">Explore learning →</a></div>
+          <div class="card"><div class="card-icon">🧠</div><h3>Knowledge quiz</h3><p>Practice math, science, English, and history.</p><a class="card-link" href="#" onclick="showPage('quiz');return false">Start a quiz →</a></div>
+          <div class="card"><div class="card-icon">🧮</div><h3>Calculator</h3><p>Use the built-in calculator for quick math.</p><a class="card-link" href="#" onclick="showPage('calculator');return false">Open calculator →</a></div>
+        </div>
+      </section>
+
+      <section class="page" id="resources">
+        <div class="section-head"><div><h2>App resources</h2><p>Your go-to school websites, organized in one convenient place.</p></div></div>
+        <div class="resource-grid">
+          <div class="card resource-card"><div class="card-icon">🔐</div><div class="resource-tag">School login</div><h3>ClassLink</h3><p>Access the apps and learning tools provided by your school. Your school may have its own portal link.</p><a class="card-link" href="https://www.classlink.com/" target="_blank" rel="noopener noreferrer">Open ClassLink ↗</a></div>
+          <div class="card resource-card"><div class="card-icon">📐</div><div class="resource-tag">Math practice</div><h3>DeltaMath</h3><p>Practice math skills and complete assigned problems.</p><a class="card-link" href="https://www.deltamath.com/" target="_blank" rel="noopener noreferrer">Open DeltaMath ↗</a></div>
+          <div class="card resource-card"><div class="card-icon">🎒</div><div class="resource-tag">Classwork</div><h3>Google Classroom</h3><p>Check assignments, class announcements, and shared materials.</p><a class="card-link" href="https://classroom.google.com/" target="_blank" rel="noopener noreferrer">Open Classroom ↗</a></div>
+          <div class="card resource-card"><div class="card-icon">🧮</div><div class="resource-tag">Calculator</div><h3>Desmos</h3><p>Use a scientific calculator and explore graphs and equations.</p><a class="card-link" href="https://www.desmos.com/scientific" target="_blank" rel="noopener noreferrer">Open Desmos ↗</a></div>
+          <div class="card resource-card"><div class="card-icon">📚</div><div class="resource-tag">Study practice</div><h3>Khan Academy</h3><p>Learn at your own pace with lessons and practice in many subjects.</p><a class="card-link" href="https://www.khanacademy.org/" target="_blank" rel="noopener noreferrer">Open Khan Academy ↗</a></div>
+          <div class="card resource-card"><div class="card-icon">🗂️</div><div class="resource-tag">Study sets</div><h3>Quizlet</h3><p>Review vocabulary and concepts with digital study sets.</p><a class="card-link" href="https://quizlet.com/" target="_blank" rel="noopener noreferrer">Open Quizlet ↗</a></div>
+          <div class="card resource-card"><div class="card-icon">🌙</div><div class="resource-tag">Islamic learning</div><h3>Alislam.org</h3><p>Explore the Holy Quran, books, articles, Friday sermons, audio, and educational resources from the Ahmadiyya Muslim Community.</p><a class="card-link" href="https://www.alislam.org/" target="_blank" rel="noopener noreferrer">Open Alislam.org ↗</a></div>
+          <div class="card resource-card"><div class="card-icon">📖</div><div class="resource-tag">Quran library</div><h3>Alislam Library</h3><p>Browse Quran resources, books, articles, multimedia, and topics for further study.</p><a class="card-link" href="https://www.alislam.org/library/" target="_blank" rel="noopener noreferrer">Open the library ↗</a></div>
+          <div class="card resource-card"><div class="card-icon">🧪</div><div class="resource-tag">Science & math</div><h3>CK-12</h3><p>Study science and mathematics with free lessons, explanations, and practice.</p><a class="card-link" href="https://www.ck12.org/" target="_blank" rel="noopener noreferrer">Open CK-12 ↗</a></div>
+          <div class="card resource-card"><div class="card-icon">🚀</div><div class="resource-tag">Science & space</div><h3>NASA STEM</h3><p>Explore space, engineering, science activities, and learning resources.</p><a class="card-link" href="https://www.nasa.gov/learning-resources/" target="_blank" rel="noopener noreferrer">Open NASA Learning ↗</a></div>
+          <div class="card resource-card"><div class="card-icon">🌎</div><div class="resource-tag">Geography & nature</div><h3>National Geographic Education</h3><p>Discover geography, maps, wildlife, environment, and the world around us.</p><a class="card-link" href="https://education.nationalgeographic.org/" target="_blank" rel="noopener noreferrer">Open Nat Geo Education ↗</a></div>
+          <div class="card resource-card"><div class="card-icon">💻</div><div class="resource-tag">Coding</div><h3>Code.org</h3><p>Learn computer science and coding through guided lessons and activities.</p><a class="card-link" href="https://code.org/" target="_blank" rel="noopener noreferrer">Open Code.org ↗</a></div>
+          <div class="card resource-card"><div class="card-icon">🎨</div><div class="resource-tag">Creative coding</div><h3>Scratch</h3><p>Create interactive stories, animations, and games while learning programming ideas.</p><a class="card-link" href="https://scratch.mit.edu/" target="_blank" rel="noopener noreferrer">Open Scratch ↗</a></div>
+          <div class="card resource-card"><div class="card-icon">📺</div><div class="resource-tag">Videos & lessons</div><h3>PBS LearningMedia</h3><p>Find classroom-friendly videos, interactive lessons, and learning materials.</p><a class="card-link" href="https://pbslearningmedia.org/" target="_blank" rel="noopener noreferrer">Open PBS LearningMedia ↗</a></div>
+        </div>
+        <p class="small" style="margin-top:17px">Some school tools require your school account. Use the official portal link provided by your teacher if your school has a custom sign-in page.</p>
+      </section>
+
+
+      <section class="page" id="learning">
+        <div class="section-head"><div><h2>Learning center</h2><p>Pick what you want to learn, choose your challenge level, and practice your way.</p></div></div>
+        <div class="panel">
+          <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
+            <div><label for="learnSubject"><strong>Subject</strong></label>
+              <select class="field" id="learnSubject">
+                <option>Math</option><option>Science</option><option>English</option><option>History</option><option>Geography</option><option>Computer Science</option>
+              </select>
+            </div>
+            <div><label for="learnDifficulty"><strong>Difficulty</strong></label>
+              <select class="field" id="learnDifficulty">
+                <option value="easy">Beginner</option><option value="medium" selected>Intermediate</option><option value="hard">Advanced</option>
+              </select>
+            </div>
+            <div><label for="learnMode"><strong>Activity type</strong></label>
+              <select class="field" id="learnMode">
+                <option value="all">Mixed practice</option><option value="multiple">Multiple choice</option>
+                <option value="truefalse">True or false</option><option value="short">Short answer</option>
+                <option value="cards">Flashcard review</option>
+              </select>
+            </div>
+          </div>
+          <div class="row between">
+            <p class="small" style="margin:0">Beginner builds the basics · Intermediate adds more steps · Advanced uses deeper thinking.</p>
+            <button class="primary-btn" onclick="beginLearning()">Start learning →</button>
+          </div>
+        </div>
+        <div class="section-head"><div><h2>Choose a learning style</h2><p>Different ways to practice the same skills.</p></div></div>
+        <div class="grid">
+          <div class="card"><div class="card-icon">📝</div><h3>Mixed practice</h3><p>A blend of question styles to keep practice varied.</p></div>
+          <div class="card"><div class="card-icon">🔘</div><h3>Multiple choice</h3><p>Compare answer options and choose the best one.</p></div>
+          <div class="card"><div class="card-icon">☑️</div><h3>True or false</h3><p>Check facts and concepts quickly.</p></div>
+          <div class="card"><div class="card-icon">⌨️</div><h3>Short answer</h3><p>Recall information and write your own answer.</p></div>
+          <div class="card"><div class="card-icon">🃏</div><h3>Flashcard review</h3><p>Practice key terms and explanations.</p></div>
+          <div class="card"><div class="card-icon">🚀</div><h3>Level up</h3><p>Move from beginner to advanced as you gain confidence.</p></div>
+        </div>
+        <div class="panel" id="learningActivity" style="display:none">
+          <div class="row between"><div><div class="resource-tag" id="learningMeta">PRACTICE</div><h2 id="learningQuestion" style="margin:0">Ready?</h2></div><span class="small" id="learningCount"></span></div>
+          <div id="learningChoices" style="margin-top:14px"></div>
+          <div id="learningFeedback" aria-live="polite"></div>
+          <div class="row between" style="margin-top:12px"><button class="secondary-btn" onclick="beginLearning()">Restart activity</button><button class="primary-btn" id="learningNext" onclick="nextLearningQuestion()" style="display:none">Next →</button></div>
+        </div>
+      </section>
+
+      <section class="page" id="quiz">
+        <div class="section-head"><div><h2>Knowledge quiz</h2><p>Choose a subject and see what you know.</p></div></div>
+        <div class="panel">
+          <label for="subject"><strong>Choose a subject</strong></label>
+          <select class="field" id="subject" onchange="startQuiz()"><option>Math</option><option>Science</option><option>English</option><option>History</option></select>
+          <div id="quizContent" class="empty-note">Choose a subject to begin.</div>
+        </div>
+      </section>
+
+      <section class="page" id="cards">
+        <div class="section-head"><div><h2>Flashcards</h2><p>Tap a card to reveal its answer.</p></div></div>
+        <div class="panel">
+          <div class="flashcard" id="flashcard" onclick="flipCard()" role="button" tabindex="0">What is the largest planet in our solar system?<div class="small">Tap to reveal answer</div></div>
+          <div class="row between"><button class="secondary-btn" onclick="previousCard()">← Previous</button><span class="small" id="cardNumber">1 / 5</span><button class="primary-btn" onclick="nextCard()">Next →</button></div>
+        </div>
+      </section>
+
+      <section class="page" id="calculator">
+        <div class="section-head"><div><h2>Calculator</h2><p>A simple calculator for everyday math.</p></div></div>
+        <div class="panel calc">
+          <input class="calc-display" id="calcDisplay" value="0" readonly aria-label="Calculator display">
+          <div class="calc-grid">
+            <button onclick="calcClear()">AC</button><button onclick="calcInput('(')">(</button><button onclick="calcInput(')')">)</button><button class="operator" onclick="calcInput('/')">÷</button>
+            <button onclick="calcInput('7')">7</button><button onclick="calcInput('8')">8</button><button onclick="calcInput('9')">9</button><button class="operator" onclick="calcInput('*')">×</button>
+            <button onclick="calcInput('4')">4</button><button onclick="calcInput('5')">5</button><button onclick="calcInput('6')">6</button><button class="operator" onclick="calcInput('-')">−</button>
+            <button onclick="calcInput('1')">1</button><button onclick="calcInput('2')">2</button><button onclick="calcInput('3')">3</button><button class="operator" onclick="calcInput('+')">+</button>
+            <button onclick="calcInput('0')">0</button><button onclick="calcInput('.')">.</button><button onclick="calcBack()">⌫</button><button class="equals" onclick="calcEquals()">=</button>
+          </div>
+          <p class="small">For more advanced functions and graphing, open Desmos in App resources.</p>
+        </div>
+      </section>
+
+      <section class="page" id="assistant">
+        <div class="section-head"><div><h2>Study assistant</h2><p>Organize your thinking and get a helpful study prompt.</p></div></div>
+        <div class="panel">
+          <label for="question"><strong>What are you working on?</strong></label>
+          <textarea class="field" id="question" rows="4" placeholder="Example: I need to understand fractions..."></textarea>
+          <button class="primary-btn" onclick="askAssistant()">Get a study tip</button>
+          <div id="assistantAnswer"></div>
+          <p class="small">This demo gives general study guidance. It is not connected to a live AI service.</p>
+        </div>
+      </section>
+
+      <section class="page" id="games">
+        <div class="section-head"><div><h2>Study games</h2><p>Take a quick break while keeping your brain active.</p></div></div>
+        <div class="panel" style="max-width:560px">
+          <div class="card-icon">🎮</div><h3>Quick Math</h3><p class="muted">Solve the problem to earn points.</p>
+          <h2 id="gameQuestion">12 + 9 = ?</h2><input class="field" id="gameAnswer" type="number" placeholder="Type your answer">
+          <button class="primary-btn" onclick="checkGame()">Check answer</button><button class="secondary-btn" onclick="newGame()" style="margin-left:6px">New question</button><div id="gameResult"></div>
+        </div>
+      </section>
+
+      <section class="page" id="challenge">
+        <div class="section-head"><div><h2>Daily challenge</h2><p>A small challenge is a great way to keep learning.</p></div></div>
+        <div class="panel" style="max-width:620px">
+          <div class="resource-tag">TODAY'S MATH CHALLENGE</div><h2>What is 15 × 8?</h2><div id="challengeOptions"></div><div id="challengeResult"></div>
+        </div>
+      </section>
+
+      <section class="page" id="settings">
+        <div class="section-head"><div><h2>Settings</h2><p>Adjust the app to make your learning space comfortable.</p></div></div>
+        <div class="panel">
+          <div class="setting-row"><div><strong>Dark appearance</strong><div class="small">Switch between light and dark themes.</div></div><button class="switch" id="darkSwitch" onclick="toggleDark()" aria-label="Toggle dark appearance"></button></div>
+          <div class="setting-row"><div><strong>Accent color</strong><div class="small">Choose the main highlight color.</div></div><select class="field" id="accentSelect" style="max-width:170px;margin:0" onchange="setAccent(this.value)"><option value="#4169e1">Blue</option><option value="#0f9b8e">Teal</option><option value="#7c55d9">Purple</option><option value="#d97706">Amber</option></select></div>
+          <div class="setting-row"><div><strong>Reset learning stats</strong><div class="small">Clear saved points and completed activities on this device.</div></div><button class="secondary-btn" onclick="resetStats()">Reset stats</button></div>
+        </div>
+        <p class="small">Your theme and progress are saved in this browser on this device.</p>
+      </section>
+    </main>
+    <footer>LearnSpark · Learn smarter. Grow faster.</footer>
+  </div>
+</div>
+<script>
+const pageNames={home:"Dashboard",resources:"App resources",learning:"Learning center",quiz:"Quizzes",cards:"Flashcards",calculator:"Calculator",assistant:"Study assistant",games:"Study games",challenge:"Daily challenge",settings:"Settings"};
+function showPage(id){document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));document.getElementById("pageTitle").textContent=pageNames[id]||"LearnSpark";closeMenu();if(id==="challenge")loadChallenge();if(id==="quiz"&&!quizStarted)startQuiz();updateDashboard();window.scrollTo({top:0,behavior:"smooth"});}
+document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+function toggleMenu(){document.body.classList.toggle("menu-open")}function closeMenu(){document.body.classList.remove("menu-open")}
+let completed=Number(localStorage.getItem("ls_completed")||0),points=Number(localStorage.getItem("ls_points")||0);
+function updateDashboard(){document.getElementById("completed").textContent=completed;document.getElementById("points").textContent=points;let p=Math.min(100,completed*10);document.getElementById("progressBar").style.width=p+"%";document.getElementById("progressText").textContent=p+"% learning progress";document.getElementById("progressPercent").textContent=p+"%"}
+function reward(n){points+=n;completed++;localStorage.setItem("ls_points",points);localStorage.setItem("ls_completed",completed);updateDashboard()}
+const questions={Math:[{q:"What is 12 × 6?",a:["62","72","82","66"],c:1},{q:"What is 144 ÷ 12?",a:["10","11","12","14"],c:2},{q:"What is 25% of 80?",a:["10","15","20","25"],c:2}],Science:[{q:"Which planet is known as the Red Planet?",a:["Venus","Mars","Jupiter","Saturn"],c:1},{q:"What gas do plants absorb?",a:["Oxygen","Nitrogen","Carbon dioxide","Hydrogen"],c:2},{q:"What is the center of an atom called?",a:["Cell","Nucleus","Core","Electron"],c:1}],English:[{q:"Which word is a noun?",a:["Quickly","Beautiful","Teacher","Run"],c:2},{q:"What is the opposite of ancient?",a:["Old","Modern","Historic","Past"],c:1},{q:"Which is a complete sentence?",a:["Running fast","The dog barked.","Because it rained","Under the table"],c:1}],History:[{q:"Which civilization built the pyramids at Giza?",a:["Romans","Ancient Egyptians","Vikings","Greeks"],c:1},{q:"Who was the first president of the United States?",a:["Abraham Lincoln","George Washington","Thomas Jefferson","John Adams"],c:1},{q:"Where did the Olympic Games originate?",a:["Rome","Egypt","Ancient Greece","China"],c:2}]};
+let selected="Math",qi=0,score=0,quizStarted=false;
+function startQuiz(){selected=document.getElementById("subject").value;qi=0;score=0;quizStarted=true;renderQuestion()}
+function renderQuestion(){let q=questions[selected][qi];document.getElementById("quizContent").innerHTML=`<p class="small">QUESTION ${qi+1} OF ${questions[selected].length}</p><h3>${q.q}</h3>`+q.a.map((a,i)=>`<button class="answer" onclick="answerQuiz(${i})">${a}</button>`).join("")+`<div id="quizFeedback"></div>`}
+function answerQuiz(i){let q=questions[selected][qi];document.querySelectorAll("#quizContent .answer").forEach(b=>b.disabled=true);if(i===q.c){score++;document.getElementById("quizFeedback").innerHTML="<p>✓ Correct! Great work.</p>"}else{document.getElementById("quizFeedback").innerHTML=`<p>Not quite — the correct answer is ${q.a[q.c]}.</p>`}let n=document.createElement("button");n.className="primary-btn";n.style.marginTop="10px";n.textContent=qi===questions[selected].length-1?"Finish quiz":"Next question";n.onclick=()=>{qi++;if(qi<questions[selected].length)renderQuestion();else{reward(score*10);document.getElementById("quizContent").innerHTML=`<h3>Quiz complete!</h3><p>You got ${score} out of ${questions[selected].length} correct.</p><button class="primary-btn" onclick="startQuiz()">Try again</button>`}};document.getElementById("quizFeedback").appendChild(n)}
+const flashcards=[["What is the largest planet?","Jupiter"],["What is H₂O?","Water"],["How many sides does a hexagon have?","Six"],["What is a noun?","A word that names a person, place, thing, or idea."],["What is the freezing point of water?","0°C (32°F)"]];let ci=0,flipped=false;
+function renderCard(){document.getElementById("cardNumber").textContent=(ci+1)+" / "+flashcards.length;document.getElementById("flashcard").innerHTML=(flipped?flashcards[ci][1]:flashcards[ci][0])+`<div class="small">Tap to ${flipped?"see question":"reveal answer"}</div>`}
+function flipCard(){flipped=!flipped;renderCard()}function nextCard(){ci=(ci+1)%flashcards.length;flipped=false;renderCard()}function previousCard(){ci=(ci-1+flashcards.length)%flashcards.length;flipped=false;renderCard()}
+function askAssistant(){let q=document.getElementById("question").value.trim();if(!q){document.getElementById("assistantAnswer").innerHTML="<p class='muted'>Enter a topic first.</p>";return}document.getElementById("assistantAnswer").innerHTML="<div class='empty-note' style='margin-top:15px'><strong>Try this approach:</strong><p>1. Write down what you already know about “"+escapeHtml(q)+"”.<br>2. Break it into two or three smaller questions.<br>3. Work through one example, then explain the idea in your own words.</p></div>"}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function loadChallenge(){document.getElementById("challengeOptions").innerHTML=[100,110,120,130].map(n=>`<button class="answer" onclick="challengeAnswer(${n})">${n}</button>`).join("")}
+function challengeAnswer(n){document.querySelectorAll("#challengeOptions button").forEach(b=>b.disabled=true);if(n===120){document.getElementById("challengeResult").innerHTML="<p>Correct! You earned 15 points.</p>";reward(15)}else document.getElementById("challengeResult").innerHTML="<p>Good try! The answer is 120. Keep practicing!</p>"}
+let gameAnswer=21,gameDone=false;function newGame(){let a=Math.floor(Math.random()*20)+1,b=Math.floor(Math.random()*20)+1;gameAnswer=a+b;document.getElementById("gameQuestion").textContent=`${a} + ${b} = ?`;document.getElementById("gameAnswer").value="";document.getElementById("gameResult").textContent="";gameDone=false}
+function checkGame(){if(gameDone)return;let a=Number(document.getElementById("gameAnswer").value);if(a===gameAnswer){gameDone=true;document.getElementById("gameResult").textContent="Correct! You earned 10 points.";reward(10)}else document.getElementById("gameResult").textContent="Not quite — try again."}
+
+const learningBank = {
+ Math:{
+  easy:[
+   {type:"multiple",q:"What is 7 + 5?",a:["10","11","12","13"],correct:"12",explain:"7 + 5 = 12."},
+   {type:"truefalse",q:"A square has four equal sides.",correct:"true",explain:"All four sides of a square are equal."},
+   {type:"short",q:"What is half of 18?",correct:"9",explain:"18 ÷ 2 = 9."}
+  ],
+  medium:[
+   {type:"multiple",q:"What is 25% of 80?",a:["10","15","20","25"],correct:"20",explain:"25% is one quarter, and 80 ÷ 4 = 20."},
+   {type:"truefalse",q:"The angles in a triangle add up to 180°.",correct:"true",explain:"The interior angles of every triangle total 180°."},
+   {type:"short",q:"Solve: 3x = 27. What is x?",correct:"9",explain:"Divide both sides by 3: x = 9."}
+  ],
+  hard:[
+   {type:"multiple",q:"If 2(x + 4) = 18, what is x?",a:["3","5","7","9"],correct:"5",explain:"Divide by 2 to get x + 4 = 9, then subtract 4."},
+   {type:"truefalse",q:"The square root of 144 is 14.",correct:"false",explain:"12 × 12 = 144, so the square root is 12."},
+   {type:"short",q:"A $60 item is discounted by 15%. What is the sale price?",correct:"51",explain:"15% of 60 is 9; 60 − 9 = 51."}
+  ]
+ },
+ Science:{
+  easy:[
+   {type:"multiple",q:"Which part of a plant usually absorbs water?",a:["Flower","Roots","Leaves","Fruit"],correct:"Roots",explain:"Roots take in water and minerals from the soil."},
+   {type:"truefalse",q:"Earth is a planet.",correct:"true",explain:"Earth is the third planet from the Sun."},
+   {type:"short",q:"What force pulls objects toward Earth?",correct:"gravity",explain:"Gravity attracts objects toward one another."}
+  ],
+  medium:[
+   {type:"multiple",q:"Which gas do plants take in during photosynthesis?",a:["Oxygen","Carbon dioxide","Helium","Hydrogen"],correct:"Carbon dioxide",explain:"Plants use carbon dioxide, water, and light to make sugars."},
+   {type:"truefalse",q:"Sound can travel through a vacuum.",correct:"false",explain:"Sound needs a medium, such as air, water, or a solid."},
+   {type:"short",q:"What is the basic unit of life?",correct:"cell",explain:"All living organisms are made of one or more cells."}
+  ],
+  hard:[
+   {type:"multiple",q:"Which cell structure is most directly responsible for producing usable energy?",a:["Ribosome","Mitochondrion","Nucleus","Cell wall"],correct:"Mitochondrion",explain:"Mitochondria release energy from food through cellular respiration."},
+   {type:"truefalse",q:"An object moving at constant velocity has zero net force.",correct:"true",explain:"With constant velocity, acceleration is zero, so net force is zero."},
+   {type:"short",q:"What is the name of the process where liquid water becomes water vapor?",correct:"evaporation",explain:"Evaporation changes a liquid into a gas."}
+  ]
+ },
+ English:{
+  easy:[
+   {type:"multiple",q:"Which word is a noun?",a:["Quickly","Jump","Teacher","Blue"],correct:"Teacher",explain:"A noun names a person, place, thing, or idea."},
+   {type:"truefalse",q:"A verb can show an action.",correct:"true",explain:"Verbs can express actions or states of being."},
+   {type:"short",q:"What is the plural of 'child'?",correct:"children",explain:"The plural form of child is children."}
+  ],
+  medium:[
+   {type:"multiple",q:"Which sentence uses a semicolon correctly?",a:["I studied; and I slept.","I studied; I felt prepared.","I; studied today.","I studied; because I had a test."],correct:"I studied; I felt prepared.",explain:"A semicolon can join two closely related independent clauses."},
+   {type:"truefalse",q:"A metaphor makes a direct comparison without using 'like' or 'as'.",correct:"true",explain:"That is the usual definition of a metaphor."},
+   {type:"short",q:"What is the adjective in: 'The bright star shone'?",correct:"bright",explain:"Bright describes the noun star."}
+  ],
+  hard:[
+   {type:"multiple",q:"Which point of view uses 'I' as the narrator?",a:["First person","Second person","Third person limited","Third person omniscient"],correct:"First person",explain:"First-person narration uses pronouns such as I and we."},
+   {type:"truefalse",q:"Situational irony occurs when the outcome differs from what is expected.",correct:"true",explain:"The contrast between expectation and reality creates situational irony."},
+   {type:"short",q:"What is the term for the central message or insight of a literary work?",correct:"theme",explain:"Theme is the deeper message or central idea."}
+  ]
+ },
+ History:{
+  easy:[
+   {type:"multiple",q:"Which ancient civilization built the pyramids at Giza?",a:["Romans","Egyptians","Vikings","Aztecs"],correct:"Egyptians",explain:"The pyramids at Giza were built in ancient Egypt."},
+   {type:"truefalse",q:"The United States declared independence in 1776.",correct:"true",explain:"The Declaration of Independence was adopted in 1776."},
+   {type:"short",q:"What is the study of the past called?",correct:"history",explain:"History is the study of past events."}
+  ],
+  medium:[
+   {type:"multiple",q:"What was a major purpose of the Magna Carta in 1215?",a:["To limit the king's power","To start the Industrial Revolution","To create the Roman Empire","To end World War I"],correct:"To limit the king's power",explain:"The Magna Carta placed limits on royal authority."},
+   {type:"truefalse",q:"The Renaissance began in Italy.",correct:"true",explain:"The Renaissance began in Italian city-states before spreading."},
+   {type:"short",q:"What 1863 U.S. document declared enslaved people in rebelling areas free?",correct:"emancipation proclamation",explain:"President Abraham Lincoln issued the Emancipation Proclamation in 1863."}
+  ],
+  hard:[
+   {type:"multiple",q:"Which factor most directly helped spark the French Revolution?",a:["Financial crisis and social inequality","The discovery of electricity","The fall of the Aztec Empire","The start of the Cold War"],correct:"Financial crisis and social inequality",explain:"Debt, unequal taxation, and social divisions contributed to the revolution."},
+   {type:"truefalse",q:"The Treaty of Versailles was signed after World War I.",correct:"true",explain:"The treaty was signed in 1919, after the 1918 armistice."},
+   {type:"short",q:"What term describes a government ruled by a small group of people?",correct:"oligarchy",explain:"An oligarchy is a system in which a small group holds power."}
+  ]
+ },
+ Geography:{
+  easy:[
+   {type:"multiple",q:"Which is the largest ocean?",a:["Atlantic","Indian","Pacific","Arctic"],correct:"Pacific",explain:"The Pacific Ocean is the largest."},
+   {type:"truefalse",q:"The Equator divides Earth into the Northern and Southern Hemispheres.",correct:"true",explain:"The Equator is at 0° latitude."},
+   {type:"short",q:"What is the capital of Japan?",correct:"tokyo",explain:"Tokyo is Japan's capital."}
+  ],
+  medium:[
+   {type:"multiple",q:"Which imaginary line is at 0° longitude?",a:["Equator","Prime Meridian","Tropic of Cancer","International Date Line"],correct:"Prime Meridian",explain:"The Prime Meridian is the reference line for longitude."},
+   {type:"truefalse",q:"A peninsula is land surrounded by water on three sides.",correct:"true",explain:"A peninsula is connected to the mainland on one side."},
+   {type:"short",q:"What is the name for the movement of water from Earth's surface into the atmosphere as vapor?",correct:"evaporation",explain:"Evaporation is one stage of the water cycle."}
+  ],
+  hard:[
+   {type:"multiple",q:"What type of plate boundary is associated with plates moving apart?",a:["Convergent","Transform","Divergent","Collision"],correct:"Divergent",explain:"At divergent boundaries, tectonic plates move away from each other."},
+   {type:"truefalse",q:"Lines of latitude run east-west.",correct:"true",explain:"Latitude lines circle the globe parallel to the Equator."},
+   {type:"short",q:"What term describes the long-term average pattern of weather in a region?",correct:"climate",explain:"Climate describes long-term weather patterns."}
+  ]
+ },
+ "Computer Science":{
+  easy:[
+   {type:"multiple",q:"What does CPU stand for?",a:["Central Processing Unit","Computer Power Utility","Core Program User","Central Print Unit"],correct:"Central Processing Unit",explain:"The CPU executes instructions and processes data."},
+   {type:"truefalse",q:"A keyboard is an input device.",correct:"true",explain:"A keyboard sends information into a computer."},
+   {type:"short",q:"What do we call a set of step-by-step instructions for a computer?",correct:"algorithm",explain:"An algorithm is a sequence of steps for solving a problem."}
+  ],
+  medium:[
+   {type:"multiple",q:"Which structure repeats instructions while a condition is true?",a:["Sequence","Loop","Variable","Comment"],correct:"Loop",explain:"A loop repeats a block of instructions."},
+   {type:"truefalse",q:"A variable can store a value that may change.",correct:"true",explain:"Variables hold data that a program can use and update."},
+   {type:"short",q:"What is the name for finding and fixing errors in code?",correct:"debugging",explain:"Debugging is the process of locating and correcting bugs."}
+  ],
+  hard:[
+   {type:"multiple",q:"What is the time complexity of binary search on a sorted list?",a:["O(n)","O(log n)","O(n²)","O(1) always"],correct:"O(log n)",explain:"Binary search halves the remaining search space at each step."},
+   {type:"truefalse",q:"In a stack, the last item added is usually the first item removed.",correct:"true",explain:"A stack follows last-in, first-out (LIFO) order."},
+   {type:"short",q:"What does HTML stand for?",correct:"hypertext markup language",explain:"HTML is the standard markup language for web pages."}
+  ]
+ }
+};
+let learningSet=[],learningIndex=0,learningScore=0,learningMode="all",learningSubject="Math",learningLevel="medium",learningFlipped=false;
+function normalizeAnswer(v){return v.trim().toLowerCase().replace(/[.,!?]/g,"").replace(/\s+/g," ")}
+function beginLearning(){
+ learningSubject=document.getElementById("learnSubject").value;
+ learningLevel=document.getElementById("learnDifficulty").value;
+ learningMode=document.getElementById("learnMode").value;
+ let bank=learningBank[learningSubject][learningLevel];
+ learningSet=learningMode==="all"?bank.slice():bank.filter(q=>learningMode==="cards"||q.type===learningMode);
+ if(learningMode==="cards")learningSet=bank.map(q=>({type:"card",q:q.q,correct:q.correct,explain:q.explain}));
+ if(!learningSet.length){document.getElementById("learningActivity").style.display="block";document.getElementById("learningQuestion").textContent="No questions available";return}
+ learningIndex=0;learningScore=0;learningFlipped=false;
+ document.getElementById("learningActivity").style.display="block";
+ renderLearningQuestion();
+ document.getElementById("learningActivity").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function renderLearningQuestion(){
+ let q=learningSet[learningIndex],levelName={easy:"BEGINNER",medium:"INTERMEDIATE",hard:"ADVANCED"}[learningLevel];
+ document.getElementById("learningMeta").textContent=learningSubject.toUpperCase()+" · "+levelName+" · "+(learningMode==="all"?"MIXED PRACTICE":learningMode.toUpperCase());
+ document.getElementById("learningCount").textContent=(learningIndex+1)+" / "+learningSet.length;
+ document.getElementById("learningFeedback").textContent="";
+ document.getElementById("learningNext").style.display="none";
+ document.getElementById("learningQuestion").textContent=q.q;
+ let area=document.getElementById("learningChoices");area.innerHTML="";
+ if(q.type==="multiple"){
+  q.a.forEach(v=>{let b=document.createElement("button");b.className="answer";b.textContent=v;b.onclick=()=>checkLearning(v);area.appendChild(b)});
+ }else if(q.type==="truefalse"){
+  ["true","false"].forEach(v=>{let b=document.createElement("button");b.className="answer";b.textContent=v==="true"?"True":"False";b.onclick=()=>checkLearning(v);area.appendChild(b)});
+ }else if(q.type==="short"){
+  let input=document.createElement("input");input.className="field";input.placeholder="Type your answer";input.id="learningShortAnswer";area.appendChild(input);
+  let b=document.createElement("button");b.className="primary-btn";b.textContent="Check answer";b.onclick=()=>checkLearning(input.value);area.appendChild(b);
+ }else if(q.type==="card"){
+  let b=document.createElement("button");b.className="answer";b.textContent=learningFlipped?"Hide answer":"Reveal answer";b.onclick=()=>{learningFlipped=!learningFlipped;document.getElementById("learningFeedback").innerHTML=learningFlipped?"<div class='empty-note'><strong>Answer:</strong> "+escapeHtml(q.correct)+"<br>"+escapeHtml(q.explain)+"</div>":"";b.textContent=learningFlipped?"Hide answer":"Reveal answer";document.getElementById("learningNext").style.display=learningFlipped?"inline-block":"none"};area.appendChild(b);
+ }
+}
+function checkLearning(value){
+ let q=learningSet[learningIndex],correct=normalizeAnswer(String(value))===normalizeAnswer(String(q.correct));
+ document.querySelectorAll("#learningChoices button").forEach(b=>b.disabled=true);
+ let fb=document.getElementById("learningFeedback");
+ fb.innerHTML=`<div class="empty-note" style="margin-top:12px"><strong>${correct?"Correct! Nice work.":"Good effort — keep practicing."}</strong><br>${escapeHtml(q.explain)}${correct?"":`<br><span class="small">Answer: ${escapeHtml(q.correct)}</span>`}</div>`;
+ if(correct)learningScore++;
+ document.getElementById("learningNext").style.display="inline-block";
+ document.getElementById("learningNext").textContent=learningIndex===learningSet.length-1?"Finish activity":"Next →";
+}
+function nextLearningQuestion(){
+ if(learningIndex<learningSet.length-1){learningIndex++;learningFlipped=false;renderLearningQuestion();return}
+ reward(learningScore*5);
+ document.getElementById("learningQuestion").textContent="Practice complete!";
+ document.getElementById("learningChoices").innerHTML="";
+ document.getElementById("learningFeedback").innerHTML=`<div class="empty-note"><strong>You got ${learningScore} out of ${learningSet.length}.</strong><br>You earned ${learningScore*5} points. Try another subject or difficulty to keep learning.</div>`;
+ document.getElementById("learningNext").style.display="none";
+}
+
+let calcValue="0";function calcRender(){document.getElementById("calcDisplay").value=calcValue}function calcInput(v){if(calcValue==="0"||calcValue==="Error")calcValue=v;else calcValue+=v;calcRender()}function calcClear(){calcValue="0";calcRender()}function calcBack(){calcValue=calcValue.length>1?calcValue.slice(0,-1):"0";calcRender()}
+function calcEquals(){try{if(!/^[0-9+\-*/().\s]+$/.test(calcValue))throw Error();let result=Function('"use strict";return ('+calcValue+')')();if(!Number.isFinite(result))throw Error();calcValue=String(Number(result.toFixed(10)))}catch(e){calcValue="Error"}calcRender()}
+function toggleDark(){document.body.classList.toggle("dark");let on=document.body.classList.contains("dark");document.getElementById("darkSwitch").classList.toggle("on",on);localStorage.setItem("ls_dark",on?"1":"0")}
+function setAccent(v){document.documentElement.style.setProperty("--primary",v);document.documentElement.style.setProperty("--primary-dark",v);localStorage.setItem("ls_accent",v)}
+function resetStats(){if(confirm("Reset your points and completed activities?")){completed=0;points=0;localStorage.removeItem("ls_completed");localStorage.removeItem("ls_points");updateDashboard()}}
+(function init(){if(localStorage.getItem("ls_dark")==="1"){document.body.classList.add("dark");document.getElementById("darkSwitch").classList.add("on")}let accent=localStorage.getItem("ls_accent");if(accent){document.documentElement.style.setProperty("--primary",accent);document.documentElement.style.setProperty("--primary-dark",accent);document.getElementById("accentSelect").value=accent}renderCard();updateDashboard();loadChallenge()})();
+</script>
+</body>
+</html>
