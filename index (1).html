@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" type="image/png" href="favicon.png">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LearnSpark | Student Workspace</title>
+<meta name="theme-color" content="#4f46e5">
+<meta name="description" content="LearnSpark is your customizable student workspace for learning, study tools, planning, and resources.">
+<style>
+:root{--bg:#f4f7fb;--panel:#fff;--ink:#17233b;--muted:#718096;--line:#e4eaf3;--brand:#4f46e5;--brand2:#06b6d4;--soft:#eef0ff;--good:#0f9f76;--shadow:0 12px 35px #24345b0d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body.dark{--bg:#101626;--panel:#192238;--ink:#edf2ff;--muted:#9ba9c2;--line:#2b3853;--soft:#252d50;--shadow:0 12px 35px #0003}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:10px 14px;background:var(--soft);color:var(--ink);font-weight:650}button:hover{filter:brightness(.97);transform:translateY(-1px)}button.primary{background:var(--brand);color:white}button.ghost{background:transparent;border:1px solid var(--line)}input,select,textarea{width:100%;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:12px;padding:11px 12px;outline:none}input:focus,textarea:focus,select:focus{border-color:var(--brand);box-shadow:0 0 0 3px #4f46e51a}textarea{min-height:130px;resize:vertical}
+.app{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh}.side{background:var(--panel);border-right:1px solid var(--line);padding:22px 15px;position:sticky;top:0;height:100vh;overflow:auto}.logo{display:flex;gap:11px;align-items:center;padding:0 9px 24px}.logoMark{background:linear-gradient(135deg,var(--brand),var(--brand2));color:white;border-radius:14px;padding:10px;font-size:21px}.logo strong{display:block;font-size:18px;letter-spacing:-.5px}.logo small{color:var(--muted)}.navlabel{font-size:10px;letter-spacing:1.5px;color:var(--muted);font-weight:800;padding:14px 12px 7px}.nav{display:grid;gap:4px}.nav button{background:transparent;text-align:left;color:var(--muted);font-weight:600;padding:10px 12px}.nav button.active,.nav button:hover{background:var(--soft);color:var(--brand)}.sidefoot{position:absolute;bottom:16px;left:15px;right:15px;color:var(--muted);font-size:12px}
+main{min-width:0;padding:27px clamp(16px,4vw,46px) 55px;max-width:1500px;margin:auto;width:100%}.top{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:24px}.search{max-width:430px;position:relative}.topactions{display:flex;gap:9px;align-items:center}.avatar{border-radius:50%;background:var(--soft);width:42px;height:42px;display:grid;place-items:center;font-size:20px}
+.hero{background:linear-gradient(115deg,#4f46e5,#6366f1 55%,#06b6d4);color:white;border-radius:25px;padding:28px 30px;display:flex;justify-content:space-between;align-items:center;gap:20px;box-shadow:var(--shadow);margin-bottom:24px}.hero h1{font-size:clamp(25px,3vw,36px);line-height:1.1;margin:8px 0}.hero p{margin:0;color:#e2e8ff}.hero .eyebrow{font-size:11px;letter-spacing:1.6px;font-weight:800;color:#d8e5ff}.hero .heroicon{font-size:76px;opacity:.95}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:19px;box-shadow:var(--shadow);min-width:0}.span12{grid-column:span 12}.span8{grid-column:span 8}.span6{grid-column:span 6}.span4{grid-column:span 4}.span3{grid-column:span 3}.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:26px 0 13px}.sectionhead h2{margin:0;font-size:20px}.sectionhead p{margin:3px 0 0;color:var(--muted);font-size:13px}.stat{display:flex;align-items:center;gap:13px}.staticon{width:45px;height:45px;border-radius:14px;background:var(--soft);display:grid;place-items:center;font-size:22px}.stat strong{font-size:24px;display:block}.stat small{color:var(--muted)}.toolgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.tool{border:1px solid var(--line);background:var(--panel);border-radius:17px;padding:16px;text-align:left;display:flex;gap:12px;align-items:flex-start;min-height:104px}.tool .ico{font-size:26px}.tool strong{display:block}.tool small{color:var(--muted);font-size:12px;display:block;margin-top:4px}.tool .star{margin-left:auto;color:#eab308}.subjectgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.subject{padding:18px;border-radius:17px;border:1px solid var(--line);background:var(--panel);cursor:pointer}.subject:hover{border-color:var(--brand)}.subject .ico{font-size:28px}.subject strong{display:block;margin:7px 0 2px}.subject small{color:var(--muted)}
+.pill{display:inline-block;background:var(--soft);color:var(--brand);border-radius:100px;padding:4px 9px;font-size:11px;font-weight:750}.muted{color:var(--muted)}.row{display:flex;gap:10px;align-items:center}.row>*{flex:1}.list{display:grid;gap:9px}.item{display:flex;gap:10px;align-items:center;border:1px solid var(--line);padding:11px;border-radius:13px}.item label{flex:1}.item.done label{text-decoration:line-through;color:var(--muted)}.item input[type=checkbox]{width:18px}.item button{padding:6px 9px}.progress{height:9px;background:var(--soft);border-radius:10px;overflow:hidden}.progress div{height:100%;background:linear-gradient(90deg,var(--brand),var(--brand2));border-radius:10px}.quizbox{border:1px solid var(--line);padding:18px;border-radius:17px;margin-top:13px}.answers{display:grid;gap:9px;margin:15px 0}.answers button{text-align:left;border:1px solid var(--line);background:var(--panel)}.answers button.correct{border-color:#10b981;background:#dcfce7;color:#065f46}.answers button.wrong{border-color:#ef4444;background:#fee2e2;color:#991b1b}.feedback{padding:10px;border-radius:11px;margin:10px 0}.feedback.good{background:#dcfce7;color:#166534}.feedback.bad{background:#fff1f2;color:#9f1239}
+.calcd{background:var(--soft);padding:16px;border-radius:16px;font-size:27px;text-align:right;overflow:auto;margin:10px 0}.calcgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.calcgrid button{padding:15px 4px}.links{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.linkcard{border:1px solid var(--line);padding:13px;border-radius:13px;text-decoration:none;color:var(--ink);background:var(--panel)}.linkcard:hover{border-color:var(--brand)}.linkcard span{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+.hidden{display:none!important}.viewtitle{margin:4px 0 18px}.viewtitle h1{margin:0;font-size:30px}.viewtitle p{color:var(--muted);margin:5px 0}.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:40px}
+body{font-size:var(--user-font,15px)}:root{--user-font:15px}.hero.minimal{background:var(--panel);color:var(--ink);border:1px solid var(--line)}.hero.minimal p,.hero.minimal .eyebrow,.hero.minimal #dashDate{color:var(--muted)!important}.hero.sunrise{background:linear-gradient(115deg,#f97316,#ec4899,#8b5cf6)}.hero.minimal button{background:var(--brand)!important;color:white!important}
+@media(max-width:1000px){.app{grid-template-columns:210px 1fr}.toolgrid{grid-template-columns:repeat(2,1fr)}.span4,.span3{grid-column:span 6}.subjectgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.app{display:block}.side{height:auto;position:relative;border-right:0;border-bottom:1px solid var(--line);padding:12px}.logo{padding:0 6px 10px}.navlabel,.sidefoot{display:none}.nav{display:flex;overflow:auto}.nav button{white-space:nowrap;font-size:13px;padding:8px 10px}.top{align-items:stretch}.search{max-width:none;flex:1}.topactions .hideMobile{display:none}.hero{padding:22px}.heroicon{display:none}.span8,.span6,.span4,.span3{grid-column:span 12}.toolgrid{grid-template-columns:1fr 1fr}.links{grid-template-columns:1fr 1fr}main{padding:18px 14px 40px}}
+@media(max-width:430px){.toolgrid{grid-template-columns:1fr}.subjectgrid{grid-template-columns:1fr 1fr}.links{grid-template-columns:1fr}.hero h1{font-size:25px}}
+.sparkmsg{padding:11px 13px;border-radius:13px;margin:8px 0;max-width:94%;white-space:pre-wrap;overflow-wrap:anywhere}.sparkmsg.bot{background:var(--panel);border:1px solid var(--line)}.sparkmsg.user{background:var(--soft);margin-left:auto}.sparkmsg strong{display:block;font-size:12px;margin-bottom:3px;color:var(--brand)}#sparkForm textarea{min-width:0}
+/* Student Tools add-on */
+.student-tools-card .tool-row{display:flex;gap:8px;align-items:center;margin:8px 0;flex-wrap:wrap}
+.student-tools-card .tool-row input,.student-tools-card .tool-row select{min-width:0;flex:1}
+.student-tools-card .student-timer{font-size:2.5rem;font-weight:800;text-align:center;font-variant-numeric:tabular-nums;margin:14px 0}
+.student-tools-card .student-controls{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.student-tools-card .student-task{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+.student-tools-card .student-task.completed .task-label{text-decoration:line-through;opacity:.6}
+.student-tools-card .student-result{text-align:center;font-weight:800;margin-top:12px}
+
+
+/* LearnSpark Studio design system: refined spacing, typography, navigation and resource cards */
+:root{--brand:#4f46e5;--brand2:#0891b2;--soft:color-mix(in srgb,var(--brand) 9%,var(--panel));--shadow:0 10px 30px rgba(22,34,65,.055)}
+body{letter-spacing:-.12px;background:var(--bg)}
+.side{padding:25px 17px;border-right-color:color-mix(in srgb,var(--line) 75%,transparent)}
+.logoMark{width:44px;height:44px;display:grid;place-items:center;background:#fff;color:#111;border:1px solid #d8dce5;border-radius:15px;box-shadow:0 5px 14px #10182812}
+.logoMark:before{content:'⚡';font-size:24px}
+.logoMark{font-size:0}
+.nav button{border-radius:12px;transition:background .18s,color .18s,transform .18s}
+.nav button.active{box-shadow:inset 3px 0 var(--brand);font-weight:750}
+main{padding-top:30px}
+.card{border-radius:22px;box-shadow:0 8px 26px rgba(24,39,75,.045);transition:box-shadow .2s,border-color .2s}
+.card:hover{box-shadow:0 12px 34px rgba(24,39,75,.075)}
+.hero{border-radius:28px;position:relative;overflow:hidden;background:linear-gradient(120deg,var(--brand),color-mix(in srgb,var(--brand) 72%,#8b5cf6),var(--brand2));}
+.hero:after{content:'';position:absolute;width:260px;height:260px;border:1px solid #ffffff25;border-radius:50%;right:5%;top:-125px;pointer-events:none}
+.sectionhead{margin-top:30px}
+button,input,select,textarea,.linkcard,.tool{transition:all .16s ease}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid color-mix(in srgb,var(--brand) 45%,transparent);outline-offset:2px}
+.linkcard.pro-resource{display:flex;align-items:center;gap:13px;min-height:90px;padding:15px;border-radius:17px;transition:transform .18s,border-color .18s,box-shadow .18s}
+.linkcard.pro-resource:hover{transform:translateY(-2px);box-shadow:0 9px 22px rgba(35,45,80,.08)}
+.resource-icon{flex:0 0 42px;width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:var(--soft);font-size:21px}
+.resource-copy{display:block;min-width:0;flex:1}.resource-copy strong,.resource-copy>span,.resource-copy small{display:block}.resource-copy>span{font-size:12px;color:var(--muted);margin-top:3px}.resource-copy small{font-size:10px;color:var(--brand);margin-top:5px;overflow-wrap:anywhere}
+.student-tools-card{max-width:100%;border-radius:23px}.student-timer{font-size:clamp(42px,7vw,64px);font-weight:800;letter-spacing:-2px;text-align:center;font-variant-numeric:tabular-nums;padding:15px;color:var(--brand)}
+.student-controls{display:flex;gap:10px;flex-wrap:wrap}.student-controls button{flex:1;min-width:115px}.st-course-row{display:grid;grid-template-columns:minmax(90px,1fr) minmax(110px,.7fr) 75px;gap:9px;margin:10px 0}
+.student-task{display:flex;gap:9px;align-items:center;margin:8px 0}.student-task .task-label{flex:1;text-align:left}.student-task.completed .task-label{text-decoration:line-through;opacity:.65}
+@media(max-width:700px){.side{padding:12px 10px}.nav button.active{box-shadow:inset 0 -3px var(--brand)}.card{border-radius:18px}.hero{border-radius:22px}.st-course-row{grid-template-columns:1fr 1fr}.st-course-row input[type=text]{grid-column:1/-1}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}}
+
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+  <div class="logo"><div class="logoMark">✦</div><div><strong>LearnSpark</strong><small>Student workspace</small></div></div>
+  <div class="navlabel">YOUR WORKSPACE</div>
+  <nav class="nav" id="nav">
+    <button class="active" data-view="dashboard">⌂ Dashboard</button><button data-view="learn">📚 Learn & Practice</button><button data-view="sparkai">✨ Spark AI Tutor</button><button data-view="tasks">✓ Homework</button><button data-view="planner">🗓 Planner</button><button data-view="timer">⏱ Study Timer</button> <button data-view="studenttools">🧰 Student Tools</button><button data-view="notes">📝 Notes</button><button data-view="calculator">🧮 Calculator</button><button data-view="resources">🔗 School Resources</button><button data-view="waqf">🌱 Waqf-e-Jadid</button><button data-view="settings">⚙ Settings</button>
+  </nav>
+  <div class="sidefoot">Small steps. Big progress. ✨</div>
+</aside>
+<main>
+  <div class="top"><div class="search"><input id="search" placeholder="⌕  Search tools, subjects, resources…" aria-label="Search"></div><div class="topactions"><button class="ghost hideMobile" id="themeBtn">☾ Theme</button><div class="avatar" id="avatar">🎓</div></div></div>
+  <section id="dashboard" class="view">
+    <div style="margin:0 0 12px"><h2 id="dashboardTitle" style="margin:0;font-size:22px">LearnSpark Dashboard</h2></div>
+    <div class="hero"><div><div class="eyebrow">YOUR LEARNING SPACE</div><h1 id="greeting">Ready to learn?</h1><p>One focused step today can make tomorrow easier.</p><div style="margin-top:17px"><button style="background:white;color:#4338ca" onclick="showView('learn')">Start practicing →</button></div></div><div style="text-align:center"><div class="heroicon">🚀</div><div id="dashClock" style="font-size:25px;font-weight:800;letter-spacing:.5px">--:--</div><div id="dashDate" style="font-size:12px;color:#e2e8ff">Loading date…</div></div></div>
+    <div class="grid">
+      <div class="card span3"><div class="stat"><div class="staticon">📘</div><div><strong id="taskCount">0</strong><small>Open assignments</small></div></div></div>
+      <div class="card span3"><div class="stat"><div class="staticon">⚡</div><div><strong id="studyCount">0</strong><small>Study minutes today</small></div></div></div>
+      <div class="card span3"><div class="stat"><div class="staticon">🏆</div><div><strong id="quizCount">0</strong><small>Practice points</small></div></div></div>
+      <div class="card span3"><div class="stat"><div class="staticon">🎯</div><div><strong id="goalCount">0/3</strong><small>Daily goals</small></div></div></div>
+    </div>
+    <div class="sectionhead"><div><h2>Choose a subject</h2><p>Practice at your own pace.</p></div><button class="ghost" onclick="showView('learn')">All practice →</button></div>
+    <div class="subjectgrid">
+      <div class="subject" onclick="startQuiz('Math')"><span class="ico">➗</span><strong>Math</strong><small>Numbers & problem solving</small></div>
+      <div class="subject" onclick="startQuiz('Science')"><span class="ico">🔬</span><strong>Science</strong><small>Explore how things work</small></div>
+      <div class="subject" onclick="startQuiz('English')"><span class="ico">📖</span><strong>English</strong><small>Reading & vocabulary</small></div>
+      <div class="subject" onclick="startQuiz('History')"><span class="ico">🌎</span><strong>History & Geography</strong><small>People, places, and time</small></div>
+    </div>
+    <div class="sectionhead"><div><h2>Quick launch</h2><p>Your everyday school tools, ready when you need them.</p></div></div>
+    <div class="toolgrid" id="quickTools"></div>
+    <div class="sectionhead"><div><h2>Today's checklist</h2><p>Build momentum with three small wins.</p></div><button class="ghost" onclick="showView('planner')">Edit goals</button></div>
+    <div class="card"><div id="goals" class="list"></div></div>
+  </section>
+  <section id="learn" class="view hidden">
+    <div class="viewtitle"><h1>Learn & Practice</h1><p>Choose a subject, select a difficulty, and try a short quiz.</p></div>
+    <div class="card">
+      <div class="row"><select id="subject" onchange="updateTopics()"><option>Math</option><option>Science</option><option>English</option><option>History</option><option>Computer Science</option><option>Geography</option><option>Art</option><option>Health & Wellness</option><option>Financial Literacy</option><option>Languages</option><option>Islamic Studies</option><option>Study Skills</option></select><select id="topic"><option value="all">All topics</option></select><select id="difficulty"><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="challenge">Challenge</option></select><button class="primary" onclick="startSelected()">Start quiz</button></div>
+      <div id="quiz" class="quizbox"><strong>Ready when you are!</strong><p class="muted">Choose a subject and topic. Quizzes now draw from larger question banks.</p></div>
+    </div>
+    <div class="sectionhead"><div><h2>Flashcard studio</h2><p>Review a full deck, flip cards, and move through the set.</p></div></div>
+    <div class="card"><div class="row"><select id="deckSubject" onchange="loadDeck()"><option>Math</option><option>Science</option><option>English</option><option>History</option><option>Computer Science</option><option>Geography</option><option>Art</option><option>Health & Wellness</option><option>Financial Literacy</option><option>Languages</option><option>Islamic Studies</option><option>Study Skills</option></select><button class="ghost" onclick="shuffleDeck()">🔀 Shuffle deck</button></div>
+      <div class="quizbox" id="flashcard" style="min-height:160px;display:grid;place-items:center;text-align:center;cursor:pointer" onclick="flipCard()" role="button" tabindex="0"><div><span class="pill" id="cardCount">Card 1 of 20</span><h2 id="cardFace" style="margin:18px 0">Tap to reveal</h2><p class="muted">Click the card to flip it</p></div></div>
+      <div class="row"><button class="ghost" onclick="moveCard(-1)">← Previous</button><button class="primary" onclick="flipCard()">Flip card</button><button class="ghost" onclick="moveCard(1)">Next →</button></div>
+    </div>
+    <div class="sectionhead"><div><h2>Learning pathways</h2><p>Helpful free websites for extra practice.</p></div></div><div class="links" id="learningLinks"></div>
+  </section>
+  <section id="sparkai" class="view hidden">
+  <div class="viewtitle"><h1>✨ Spark AI Tutor</h1><p>Your study helper for explanations, practice, and planning.</p></div>
+  <div class="card" style="max-width:900px">
+    <div class="row" style="align-items:center"><div><strong>Spark AI</strong><div class="muted" style="font-size:12px">Real AI tutor · secure Cloudflare connection</div></div><button class="ghost" onclick="clearSparkChat()">Clear chat</button></div>
+    <div id="sparkMessages" aria-live="polite" style="height:340px;overflow:auto;border:1px solid var(--line);border-radius:16px;padding:14px;margin:14px 0;background:var(--bg)">
+      <div class="sparkmsg bot"><strong>Spark:</strong> Hi! I can help you understand a topic, practice a skill, or make a study plan. What are you learning today?</div>
+    </div>
+    <div class="row" style="margin-bottom:10px"><button class="ghost" onclick="sparkQuick('Explain fractions simply, with an example.')">Explain a topic</button><button class="ghost" onclick="sparkQuick('Give me 5 practice questions about science.')">Practice questions</button><button class="ghost" onclick="sparkQuick('Help me make a study plan for today.')">Study plan</button></div>
+    <form id="sparkForm" class="row" style="align-items:stretch"><textarea id="sparkInput" rows="2" placeholder="Ask Spark AI a study question…" required style="flex:1;resize:vertical"></textarea><button class="primary" type="submit">Send ↗</button></form>
+    <p class="muted" style="font-size:12px;margin-top:10px">Spark uses a secure server-side AI connection. Keep your study questions respectful and never enter passwords or private information.</p>
+  </div>
+</section>
+<section id="tasks" class="view hidden">
+    <div class="viewtitle"><h1>Homework tracker</h1><p>Keep assignments organized and check them off as you finish.</p></div>
+    <div class="card"><form class="row" id="taskForm"><input id="taskInput" placeholder="Assignment or task" required><select id="taskSubject"><option>General</option><option>Math</option><option>Science</option><option>English</option><option>History</option></select><button class="primary">Add</button></form><div class="sectionhead"><h2>Your assignments</h2><span class="pill" id="taskBadge">0 tasks</span></div><div class="list" id="taskList"></div></div>
+  </section>
+  <section id="planner" class="view hidden">
+    <div class="viewtitle"><h1>Planner & daily goals</h1><p>Make a simple plan for a successful school day.</p></div>
+    <div class="grid"><div class="card span6"><h2>Daily goals</h2><p class="muted">Check off your goals. They reset each day.</p><div id="plannerGoals" class="list"></div></div><div class="card span6"><h2>Plan a task</h2><form id="planForm" class="list"><input id="planTitle" placeholder="What do you need to do?" required><input id="planDate" type="date"><textarea id="planDetail" placeholder="Notes or details (optional)" style="min-height:80px"></textarea><button class="primary">Save to homework</button></form></div></div>
+  </section>
+  <section id="timer" class="view hidden">
+    <div class="viewtitle"><h1>Focus timer</h1><p>Try a focused study session, then take a short break.</p></div>
+    <div class="card" style="max-width:600px;margin:auto;text-align:center"><div class="pill">FOCUS SESSION</div><div id="timerDisplay" style="font-size:clamp(50px,10vw,90px);font-weight:800;letter-spacing:-4px;margin:18px 0">25:00</div><div class="row"><button onclick="setTimer(15)">15 min</button><button onclick="setTimer(25)">25 min</button><button onclick="setTimer(5)">5 min break</button></div><div class="row" style="margin-top:15px"><button class="primary" id="timerStart" onclick="toggleTimer()">Start</button><button class="ghost" onclick="resetTimer()">Reset</button></div><p class="muted" id="timerMessage">Put away distractions and focus on one thing.</p></div>
+  </section>
+  <section id="notes" class="view hidden">
+    <div class="viewtitle"><h1>Quick notes</h1><p>Your notes save automatically in this browser.</p></div>
+    <div class="card"><input id="noteTitle" placeholder="Note title" style="margin-bottom:12px"><textarea id="noteBody" placeholder="Write a formula, reminder, idea, or class note…"></textarea><div class="row" style="margin-top:12px"><button class="primary" onclick="saveNote()">Save note</button><button class="ghost" onclick="clearNote()">New note</button></div><div class="sectionhead"><h2>Saved notes</h2></div><div class="list" id="noteList"></div></div>
+  </section>
+  <section id="calculator" class="view hidden">
+    <div class="viewtitle"><h1>Calculator</h1><p>For arithmetic and classroom math.</p></div><div class="card" style="max-width:430px"><div class="calcd" id="calcDisplay">0</div><div class="calcgrid" id="calcKeys"></div><div class="sectionhead"><h2>Fraction helper</h2></div><div class="row"><input id="fraction" placeholder="e.g. 3/8"><button onclick="fractionToDecimal()">Convert</button></div><p id="fractionResult" class="muted"></p></div>
+  </section>
+  <section id="resources" class="view hidden">
+    <div class="viewtitle"><h1>School resources</h1><p>Quick access to trusted learning and school websites.</p></div><div class="card"><div class="row"><input id="resourceSearch" placeholder="Filter resources…"><button class="ghost" onclick="showView('settings')">Add your links in Settings</button></div><div class="sectionhead"><h2>Learning & school apps</h2></div><div class="links" id="resourceLinks"></div></div>
+  </section>
+  
+<section id="waqf" class="view hidden">
+  <div class="viewtitle"><h1>🌱 Waqf-e-Jadid Learning Hub</h1><p>A student-friendly place to learn about the purpose, history, and service of Waqf-e-Jadid.</p></div>
+  <div class="grid">
+    <div class="card span12"><h2>What is Waqf-e-Jadid?</h2><p>Waqf-e-Jadid is a community-wide scheme of financial sacrifice and service that supports the spread of Islamic teachings, especially in areas where educational and religious resources are limited. It encourages members—including young people—to contribute with sincerity, responsibility, and a spirit of service.</p><p class="muted">Learn about the scheme through trusted community sources and guidance from the institution's leadership.</p></div>
+    <div class="card span6"><h2>📖 Learn the basics</h2><ul><li><b>Purpose:</b> help support religious education, outreach, and community service.</li><li><b>Spirit:</b> give willingly and thoughtfully, according to one's circumstances.</li><li><b>Participation:</b> families and young people can learn, encourage good habits, and take part in age-appropriate ways.</li><li><b>Reflection:</b> focus on sincerity, gratitude, and helping others—not competition.</li></ul></div>
+    <div class="card span6"><h2>🧭 Study pathway</h2><ol><li>Read a short introduction.</li><li>Explore its history and aims.</li><li>Listen to relevant guidance and talks.</li><li>Write down three important lessons.</li><li>Review the quiz below.</li></ol></div>
+    <div class="card span12"><h2>🔎 Articles & reading</h2><p>Use these trusted sites to find articles, explanations, and community updates about Waqf-e-Jadid.</p><div class="links">
+      <a class="linkcard" href="https://www.alislam.org/" target="_blank" rel="noopener"><strong>Alislam.org</strong><span>Official Islamic library and educational resources. Search the site for Waqf-e-Jadid.</span></a>
+      <a class="linkcard" href="https://www.alhakam.org/" target="_blank" rel="noopener"><strong>Alhakam</strong><span>Articles and features; search for Waqf-e-Jadid coverage.</span></a>
+      <a class="linkcard" href="https://www.mta.tv/" target="_blank" rel="noopener"><strong>MTA International</strong><span>Watch educational programs and talks related to the scheme.</span></a>
+      <a class="linkcard" href="https://www.alislam.org/search/?q=Waqf-e-Jadid" target="_blank" rel="noopener"><strong>Search Alislam</strong><span>Find relevant pages and references.</span></a>
+      <a class="linkcard" href="https://www.alhakam.org/?s=Waqf-e-Jadid" target="_blank" rel="noopener"><strong>Search Alhakam</strong><span>Browse articles mentioning Waqf-e-Jadid.</span></a>
+      <a class="linkcard" href="https://www.youtube.com/results?search_query=MTA+Waqf-e-Jadid" target="_blank" rel="noopener"><strong>Video search</strong><span>Find MTA and related educational videos.</span></a>
+    </div></div>
+    <div class="card span6"><h2>🤝 How young people can help</h2><ul><li>Understand the purpose before explaining it to others.</li><li>Share accurate information respectfully.</li><li>Make a personal plan with a parent or guardian if you wish to participate financially.</li><li>Pray for the success of sincere service and educational efforts.</li><li>Show generosity through time, kindness, and helpful actions too.</li></ul></div>
+    <div class="card span6"><h2>📝 Notes to remember</h2><p>After studying, write your own answers:</p><ul><li>What is the main purpose of Waqf-e-Jadid?</li><li>Who can learn about and support the scheme?</li><li>What values does it encourage?</li><li>What is one thing I learned today?</li></ul><button class="ghost" onclick="showView('notes')">Open my LearnSpark notes →</button></div>
+    <div class="card span12"><h2>🎯 Quick review</h2><p id="waqfQuestion" style="font-weight:700">What is the main idea of Waqf-e-Jadid?</p><div class="row" style="flex-wrap:wrap"><button class="ghost" onclick="waqfAnswer(0)">A) A scheme supporting religious education and service</button><button class="ghost" onclick="waqfAnswer(1)">B) A school sports tournament</button><button class="ghost" onclick="waqfAnswer(2)">C) A computer game</button></div><p id="waqfFeedback" class="muted" aria-live="polite">Choose an answer to check your understanding.</p></div>
+  </div>
+</section>
+
+<section id="settings" class="view hidden">
+    <div class="viewtitle"><h1>Settings</h1><p>Make your workspace feel like yours. Settings stay on this device.</p></div><div class="grid"><div class="card span6"><h2>Profile</h2><label class="muted">Dashboard title</label><input id="titleInput" placeholder="LearnSpark Dashboard" style="margin:8px 0 12px"><label class="muted">Your name (shown in the greeting)</label><input id="nameInput" placeholder="Haseeb" style="margin:8px 0 15px"><label class="muted">Avatar emoji</label><input id="avatarInput" maxlength="4" placeholder="🎓"><div class="sectionhead"><h2>Appearance</h2></div><button class="ghost" onclick="toggleTheme()">Toggle light / dark mode</button></div><div class="card span6"><h2>Custom resource link</h2><form id="linkForm" class="list"><input id="linkName" placeholder="Website name" required><input id="linkUrl" placeholder="https://…" required><button class="primary">Add link</button></form><div class="sectionhead"><h2>Your links</h2></div><div id="customLinks" class="list"></div></div><div class="card span12"><h2>Personalize your dashboard</h2><p class="muted">Change the colors, font size, clock format, and dashboard greeting.</p><div class="row"><label>Accent color<input type="color" id="accentColor" value="#4f46e5"></label><label>Font size<select id="fontSize"><option value="14">Compact</option><option value="15" selected>Comfortable</option><option value="17">Large</option><option value="19">Extra large</option></select></label><label>Clock format<select id="clockFormat"><option value="12">12-hour</option><option value="24">24-hour</option></select></label></div><div class="row" style="margin-top:12px"><label>Dashboard greeting<input id="customGreeting" placeholder="Ready to learn?"></label><label>Dashboard theme<select id="dashboardStyle"><option value="gradient">Gradient</option><option value="minimal">Minimal</option><option value="sunrise">Sunrise</option></select></label></div><button class="primary" style="margin-top:14px" onclick="saveCustomization()">Save customization</button><button class="ghost" style="margin:14px 0 0 8px" onclick="resetCustomization()">Reset appearance</button></div><div class="card span12"><h2>Data & privacy</h2><p class="muted">Tasks, notes, preferences, and scores are saved locally in this browser using local storage. They are not sent to a server by this demo.</p><button class="ghost" onclick="resetApp()">Reset this workspace</button></div></div>
+  </section>
+  <div class="footer">LearnSpark • Built to help you learn, organize, and grow 🌱</div>
+
+
+    <!-- Student Tools: merged from the standalone Student Tools page -->
+    <section id="studenttools" class="view hidden"><div class="viewtitle"><h1>🧰 Student Tools</h1><p>Extra study utilities, organized in one workspace.</p></div><section class="card student-tools-card" id="student-tools">
+      <h2>⚡ Student Tools</h2>
+      <p class="muted">Quick study utilities, right inside LearnSpark.</p>
+      <h3>Pomodoro Study Timer</h3>
+      <div class="student-timer" id="stTimerDisplay">25:00</div>
+      <div class="student-controls">
+        <button type="button" onclick="stStartTimer()">Start</button>
+        <button type="button" class="secondary" onclick="stPauseTimer()">Pause</button>
+        <button type="button" class="secondary" onclick="stResetTimer()">Reset</button>
+      </div>
+      <hr>
+      <h3>Quick GPA Calculator</h3>
+      <div id="stCourses">
+        <div class="tool-row st-course-row">
+          <input aria-label="Course name" type="text" placeholder="Course name">
+          <select class="st-grade" aria-label="Grade">
+            <option value="4.0">A (4.0)</option><option value="3.7">A− (3.7)</option><option value="3.3">B+ (3.3)</option><option value="3.0">B (3.0)</option><option value="2.7">B− (2.7)</option><option value="2.3">C+ (2.3)</option><option value="2.0">C (2.0)</option><option value="1.0">D (1.0)</option><option value="0">F (0.0)</option>
+          </select>
+          <input class="st-credits" aria-label="Credits" type="number" value="3" min="1" max="6" style="max-width:70px">
+        </div>
+      </div>
+      <div class="student-controls">
+        <button type="button" class="secondary" onclick="stAddCourse()">+ Add course</button>
+        <button type="button" onclick="stCalculateGPA()">Calculate GPA</button>
+      </div>
+      <div class="student-result" id="stGpaResult">GPA: —</div>
+      <hr>
+      <h3>Assignment Tracker</h3>
+      <div class="tool-row"><input id="stTaskInput" type="text" placeholder="Add an assignment" aria-label="Assignment"><button type="button" onclick="stAddTask()">Add</button></div>
+      <div id="stTaskList"></div>
+    </section></section>
+
+</main>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const get=(k,d)=>{try{return JSON.parse(localStorage.getItem('ls_'+k))??d}catch{return d}};
+const put=(k,v)=>localStorage.setItem('ls_'+k,JSON.stringify(v));
+let tasks=get('tasks',[]),notes=get('notes',[]),custom=get('custom',[]),scores=get('scores',0),study=get('study',0),goals=get('goals',{date:'',items:[false,false,false]});
+const today=new Date().toLocaleDateString();
+if(goals.date!==today)goals={date:today,items:[false,false,false]};
+function waqfAnswer(choice){$('waqfFeedback').textContent=choice===0?'Correct! Waqf-e-Jadid supports religious education, outreach, and service.':'Not quite—review the “What is Waqf-e-Jadid?” section and try again.';}
+function showView(v){document.querySelectorAll('.view').forEach(x=>x.classList.add('hidden'));$(v).classList.remove('hidden');document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===v));renderAll();window.scrollTo({top:0,behavior:'smooth'})}
+$('nav').addEventListener('click',e=>{let b=e.target.closest('[data-view]');if(b)showView(b.dataset.view)});
+const tools=[['⏱','Focus timer','Build a study habit','timer'],['🧮','Calculator','Work through math','calculator'],['📝','Quick notes','Save ideas and formulas','notes'],['✓','Homework','Track your assignments','tasks'],['📚','Practice quiz','Test your knowledge','learn'],['🔗','Resources','Open school websites','resources']];
+function renderTools(){ $('quickTools').innerHTML=tools.map(t=>`<button class="tool" onclick="showView('${t[3]}')"><span class="ico">${t[0]}</span><span><strong>${t[1]}</strong><small>${t[2]}</small></span></button>`).join('')}
+const goalLabels=['Review one lesson','Complete a homework task','Study or read for 15 minutes'];
+function renderGoals(){let h=goalLabels.map((x,i)=>`<div class="item ${goals.items[i]?'done':''}"><input type="checkbox" ${goals.items[i]?'checked':''} onchange="checkGoal(${i},this.checked)"><label>${x}</label></div>`).join('');$('goals').innerHTML=h;$('plannerGoals').innerHTML=h;$('goalCount').textContent=goals.items.filter(Boolean).length+'/3'}
+function checkGoal(i,v){goals.items[i]=v;put('goals',goals);renderAll()}
+function renderTasks(){ $('taskCount').textContent=tasks.filter(t=>!t.done).length;$('taskBadge').textContent=tasks.length+' tasks';$('taskList').innerHTML=tasks.length?tasks.map(t=>`<div class="item ${t.done?'done':''}"><input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${t.id})"><label><strong>${escapeHtml(t.title)}</strong><small class="muted"> · ${escapeHtml(t.subject||'General')}${t.date?' · '+t.date:''}</small></label><button onclick="deleteTask(${t.id})" title="Delete">✕</button></div>`).join(''):'<p class="muted">Nothing here yet. Add your first assignment above.</p>'}
+$('taskForm').addEventListener('submit',e=>{e.preventDefault();tasks.unshift({id:Date.now(),title:$('taskInput').value.trim(),subject:$('taskSubject').value,done:false});put('tasks',tasks);$('taskInput').value='';renderAll()});
+function toggleTask(id){tasks=tasks.map(t=>t.id===id?{...t,done:!t.done}:t);put('tasks',tasks);renderAll()}
+function deleteTask(id){tasks=tasks.filter(t=>t.id!==id);put('tasks',tasks);renderAll()}
+$('planForm').addEventListener('submit',e=>{e.preventDefault();tasks.unshift({id:Date.now(),title:$('planTitle').value.trim(),subject:'Planned',date:$('planDate').value,done:false,detail:$('planDetail').value});put('tasks',tasks);$('planTitle').value='';$('planDetail').value='';renderAll();showView('tasks')});
+function renderNotes(){ $('noteList').innerHTML=notes.length?notes.map(n=>`<div class="item"><label><strong>${escapeHtml(n.title||'Untitled note')}</strong><small class="muted">${escapeHtml((n.body||'').slice(0,90))}</small></label><button onclick="loadNote(${n.id})">Open</button><button onclick="deleteNote(${n.id})">✕</button></div>`).join(''):'<p class="muted">No saved notes yet.</p>'}
+function saveNote(){let title=$('noteTitle').value.trim(),body=$('noteBody').value.trim();if(!body&&!title)return;notes.unshift({id:Date.now(),title,body});put('notes',notes);renderNotes();$('noteTitle').value='';$('noteBody').value=''}
+function clearNote(){$('noteTitle').value='';$('noteBody').value=''}
+function loadNote(id){let n=notes.find(x=>x.id===id);$('noteTitle').value=n.title;$('noteBody').value=n.body}
+function deleteNote(id){notes=notes.filter(n=>n.id!==id);put('notes',notes);renderNotes()}
+const baseResources=[['ClassLink','https://launchpad.classlink.com/','Your school portal'],['DeltaMath','https://www.deltamath.com/','Math practice'],['Khan Academy','https://www.khanacademy.org/','Lessons and practice'],['IXL','https://www.ixl.com/','Skills practice'],['Desmos','https://www.desmos.com/calculator','Graphing calculator'],['Google Classroom','https://classroom.google.com/','Assignments and classwork'],['Google Docs','https://docs.google.com/','Writing and documents'],['Google Slides','https://slides.google.com/','Presentations'],['Google Drive','https://drive.google.com/','Store school files'],['Quizlet','https://quizlet.com/','Flashcards and review'],['Scratch','https://scratch.mit.edu/','Creative coding'],['Code.org','https://code.org/','Computer science'],['Alislam.org','https://www.alislam.org/','Islamic learning and library'],['Alhakam.org','https://www.alhakam.org/','Islamic articles, news, and features'],['MTA International','https://www.mta.tv/','Islamic programs and educational videos'],['NASA Climate Kids','https://climatekids.nasa.gov/','Science exploration'],['Britannica School','https://www.britannica.com/','Reference and research']];
+const resourceIcon=name=>({'ClassLink':'🔐','DeltaMath':'➗','Khan Academy':'🧠','IXL':'🎯','Desmos':'📈','Google Classroom':'🏫','Google Docs':'📄','Google Slides':'📊','Google Drive':'☁️','Quizlet':'🗂️','Scratch':'🐱','Code.org':'💻','Alislam.org':'📖','Alhakam.org':'📰','MTA International':'📺','NASA Climate Kids':'🚀','Britannica School':'🌍'}[name]||'🔗');
+function resourceCard(a){let url=safeUrl(a[1]);let host='';try{host=new URL(url).hostname.replace(/^www\./,'')}catch{}return `<a class="linkcard pro-resource" href="${url}" target="_blank" rel="noopener noreferrer"><span class="resource-icon" aria-hidden="true">${resourceIcon(a[0])}</span><span class="resource-copy"><strong>${escapeHtml(a[0])}</strong><span>${escapeHtml(a[2])}</span><small>${escapeHtml(host)} ↗</small></span></a>`}
+function renderResources(){let all=baseResources.concat(custom.map(c=>[c.name,c.url,'Custom link']));let q=($('resourceSearch')?.value||'').toLowerCase();let cards=all.filter(a=>a.join(' ').toLowerCase().includes(q));$('resourceLinks').innerHTML=cards.map(resourceCard).join('');$('learningLinks').innerHTML=baseResources.slice(1,8).map(resourceCard).join('')}
+$('resourceSearch').addEventListener('input',renderResources);
+$('linkForm').addEventListener('submit',e=>{e.preventDefault();let name=$('linkName').value.trim(),url=safeUrl($('linkUrl').value.trim());if(!url)return;custom.push({name,url});put('custom',custom);$('linkName').value='';$('linkUrl').value='';renderAll()});
+function renderCustom(){$('customLinks').innerHTML=custom.map((c,i)=>`<div class="item"><label>${escapeHtml(c.name)}<small class="muted">${escapeHtml(c.url)}</small></label><button onclick="removeCustom(${i})">✕</button></div>`).join('')||'<p class="muted">No custom links added.</p>'}
+function removeCustom(i){custom.splice(i,1);put('custom',custom);renderAll()}
+function safeUrl(s){try{let u=new URL(s);return ['http:','https:'].includes(u.protocol)?u.href:''}catch{return ''}}
+function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+const bank={
+Math:{easy:[['What is 7 × 8?',['54','56','64'],1,'7 groups of 8 equals 56.'],['What is 3/4 as a decimal?',['0.25','0.5','0.75'],2,'Divide 3 by 4 to get 0.75.']],medium:[['Solve: 4x + 3 = 19',['x = 3','x = 4','x = 5'],1,'Subtract 3, then divide by 4.'],['What is 15% of 80?',['8','12','15'],1,'0.15 × 80 = 12.']],challenge:[['A rectangle is 9 cm by 6 cm. What is its area?',['15 cm²','54 cm²','30 cm²'],1,'Area = length × width.']]},
+Science:{easy:[['Which planet is known as the Red Planet?',['Venus','Mars','Jupiter'],1,'Mars looks reddish because of iron-rich dust.']],medium:[['What do plants absorb during photosynthesis?',['Oxygen','Carbon dioxide','Helium'],1,'Plants use carbon dioxide, water, and light.'],['What is the basic unit of life?',['Cell','Atom','Organ'],0,'Cells are the basic units of living things.']],challenge:[['Which force keeps planets in orbit around the Sun?',['Friction','Gravity','Magnetism'],1,'Gravity attracts objects with mass.']]},
+English:{easy:[['Which word is a noun?',['Quickly','Happiness','Blue'],1,'Happiness names a feeling.']],medium:[['Choose the synonym for “ancient.”',['Modern','Very old','Tiny'],1,'Ancient means very old.'],['What is a theme in a story?',['The main message','The page number','The setting only'],0,'A theme is an idea the story explores.']],challenge:[['A comparison using “like” or “as” is a…',['Metaphor','Simile','Hyperbole'],1,'A simile compares using like or as.']]},
+History:{easy:[['Which continent is Egypt in?',['Africa','Europe','South America'],0,'Egypt is in northeastern Africa.']],medium:[['The ancient Olympic Games began in…',['Greece','Rome','China'],0,'The ancient games began in Greece.']],challenge:[['A primary source is…',['A modern summary','Evidence from the time','A fictional story'],1,'Examples include diaries, artifacts, and original documents.']]},
+'Computer Science':{easy:[['What is an algorithm?',['A step-by-step procedure','A computer screen','A type of battery'],0,'Algorithms are ordered steps for solving a problem.']],medium:[['What does a loop do in programming?',['Repeats instructions','Deletes all code','Changes a monitor'],0,'Loops repeat a set of instructions.']],challenge:[['A variable is used to…',['Store a value','Connect to Wi-Fi','Print paper'],0,'Variables store information that a program can use.']]}}
+// Broad topic-based question and flashcard content, designed for middle-school practice.
+const extraBanks = {
+Geography: {easy:[['What is a map key used for?',['To explain symbols','To measure temperature','To show stories'],0,'A map key explains what map symbols mean.']],medium:[['Lines of latitude measure distance…',['East and west of the Prime Meridian','North and south of the Equator','Above sea level'],1,'Latitude describes position north or south.'],['What is a peninsula?',['Land surrounded by water on three sides','A deep ocean trench','A mountain range'],0,'A peninsula is connected to the mainland.']],challenge:[['Why do coastal areas often have milder temperatures?',['Ocean water heats and cools slowly','They receive no sunlight','Wind stops completely'],0,'Water changes temperature more slowly than land.']]},
+Art:{easy:[['Primary colors in traditional painting are…',['Red, yellow, blue','Green, orange, purple','Black, white, gray'],0,'These are the traditional pigment primary colors.']],medium:[['What is contrast in art?',['Differences that make elements stand out','Only using one color','Making every shape identical'],0,'Contrast can involve value, color, size, or texture.']],challenge:[['What is perspective used to create?',['A sense of depth','A sound effect','A color wheel'],0,'Perspective helps show space and distance.']]},
+'Health & Wellness':{easy:[['Which habit supports healthy sleep?',['A consistent bedtime','Caffeine right before bed','Bright screens all night'],0,'A regular sleep schedule supports rest.']],medium:[['A balanced meal generally includes…',['Different food groups','Only one food','No water'],0,'Variety helps provide different nutrients.']],challenge:[['What is a useful response to stress?',['Pause, breathe, and talk to a trusted person','Ignore every problem forever','Never take breaks'],0,'Healthy coping can include calming skills and support.']]},
+'Financial Literacy':{easy:[['A budget helps you…',['Plan income and spending','Make money appear','Avoid all math'],0,'A budget is a plan for money.']],medium:[['What is saving?',['Setting money aside for later','Spending everything immediately','Borrowing without a plan'],0,'Savings can help reach future goals.']],challenge:[['If an item costs $20 and is 25% off, what is the discount?',['$2','$5','$10'],1,'One quarter of $20 is $5.']]},
+Languages:{easy:[['What does a greeting usually do?',['Say hello or welcome','Name a planet','Measure length'],0,'Greetings begin a conversation politely.']],medium:[['A cognate is a word that…',['Looks or sounds similar across languages','Always means the opposite','Has no meaning'],0,'Cognates can help learners recognize vocabulary.']],challenge:[['Why learn vocabulary in context?',['It shows how words are used','It removes grammar','It makes words identical'],0,'Context helps reveal meaning and usage.']]},
+'Islamic Studies':{easy:[['What is the name of the holy book of Islam?',['The Qur’an','The Torah','The Vedas'],0,'Muslims believe the Qur’an is revelation from Allah.']],medium:[['What does “Salam” commonly mean?',['Peace','Mountain','Book'],0,'Salam is associated with peace and greeting.']],challenge:[['What is a helpful purpose of studying history of Islam?',['Understand people, events, and lessons','Memorize without context','Replace every source with a guess'],0,'Study with respect, context, and reliable sources.']]},
+'Study Skills':{easy:[['A planner can help you…',['Remember tasks and deadlines','Make homework vanish','Skip learning'],0,'Writing tasks down supports organization.']],medium:[['Active recall means…',['Trying to remember without looking first','Reading the same line endlessly','Highlighting every word'],0,'Recall strengthens learning by retrieving information.']],challenge:[['Why space study sessions over time?',['It supports long-term memory','It guarantees no mistakes','It removes the need to practice'],0,'Spaced practice revisits ideas across multiple days.']]}
+};
+const topicsBySubject = {
+Math:['Fractions & decimals','Ratios & percentages','Geometry','Algebra','Statistics'],
+Science:['Life science','Earth & space','Matter & chemistry','Forces & energy','Ecosystems'],
+English:['Grammar','Vocabulary','Reading & theme','Writing','Figurative language'],
+History:['Ancient civilizations','US history','World history','Civics','Primary sources'],
+'Computer Science':['Algorithms','Loops & variables','Debugging','Internet safety','Data'],
+Geography:['Maps & coordinates','Landforms','Climate','Continents & oceans','Human geography'],
+Art:['Color & design','Drawing','Art history','Perspective','Visual analysis'],
+'Health & Wellness':['Sleep & habits','Nutrition basics','Emotions & coping','Safety','Movement'],
+'Financial Literacy':['Budgeting','Saving','Needs & wants','Percentages','Smart choices'],
+Languages:['Vocabulary','Grammar','Greetings','Cognates','Communication'],
+'Islamic Studies':['Qur’an & concepts','Islamic history','Values & character','Vocabulary','Learning sources'],
+'Study Skills':['Organization','Memory techniques','Reading strategies','Time management','Test preparation']
+};
+const flashcards = {
+Math:[['Numerator','The top number in a fraction.'],['Denominator','The bottom number in a fraction.'],['Equivalent fractions','Fractions that represent the same value.'],['Percent','A number out of 100.'],['Ratio','A comparison of two quantities.'],['Proportion','An equation stating two ratios are equal.'],['Area','The amount of surface inside a 2D shape.'],['Perimeter','The distance around a shape.'],['Volume','The space inside a 3D object.'],['Mean','The sum of values divided by the number of values.'],['Median','The middle value in ordered data.'],['Mode','The value that appears most often.'],['Variable','A symbol representing a number or value.'],['Expression','Numbers, variables, and operations without an equals sign.'],['Equation','A mathematical statement that two expressions are equal.'],['Integer','A whole number or its negative, including zero.'],['Prime number','A whole number greater than 1 with exactly two factors.'],['Coordinate','A number or pair locating a point.'],['Complementary angles','Two angles whose measures total 90°.'],['Probability','A measure of how likely an event is.']],
+Science:[['Cell','The basic structural and functional unit of life.'],['Photosynthesis','Process plants use to make sugars using light.'],['Ecosystem','Living things interacting with their environment.'],['Producer','An organism that makes its own food.'],['Consumer','An organism that gets energy by eating others.'],['Decomposer','An organism that breaks down dead matter.'],['Gravity','Attraction between objects with mass.'],['Force','A push or pull.'],['Energy','The ability to cause change or do work.'],['Matter','Anything that has mass and takes up space.'],['Atom','A basic unit of an element.'],['Molecule','Two or more atoms bonded together.'],['Evaporation','Liquid changing into gas at its surface.'],['Condensation','Gas changing into liquid.'],['Weather','Short-term atmospheric conditions.'],['Climate','Long-term patterns of weather.'],['Orbit','The path an object follows around another.'],['Rotation','Spinning around an axis.'],['Adaptation','A trait that helps an organism survive or reproduce.'],['Food web','Connected feeding relationships in an ecosystem.']],
+English:[['Noun','A word naming a person, place, thing, or idea.'],['Verb','A word expressing action or a state of being.'],['Adjective','A word describing a noun or pronoun.'],['Adverb','A word modifying a verb, adjective, or adverb.'],['Pronoun','A word used in place of a noun.'],['Synonym','A word with a similar meaning.'],['Antonym','A word with an opposite meaning.'],['Theme','A central idea or message in a text.'],['Plot','The sequence of events in a story.'],['Setting','Where and when a story takes place.'],['Characterization','How an author develops a character.'],['Inference','A conclusion based on clues and knowledge.'],['Evidence','Information supporting a claim.'],['Simile','A comparison using like or as.'],['Metaphor','A direct comparison between unlike things.'],['Personification','Giving human traits to nonhuman things.'],['Alliteration','Repeated beginning consonant sounds.'],['Point of view','The perspective from which a story is told.'],['Thesis','The main claim of an essay.'],['Transition','A word or phrase connecting ideas.']],
+History:[['Civilization','A complex society with organized communities and institutions.'],['Artifact','An object made or used by people in the past.'],['Primary source','Evidence created during the time being studied.'],['Secondary source','A later account interpreting primary evidence.'],['Democracy','A system in which people have a role in governing.'],['Republic','A government where representatives act for citizens.'],['Trade','Exchange of goods or services.'],['Migration','Movement of people from one place to another.'],['Chronology','Events arranged in time order.'],['Culture','Shared practices, beliefs, arts, and ways of life.'],['Empire','A group of territories ruled by one power.'],['Revolution','A major change in government or society.'],['Constitution','A framework describing government and rights.'],['Citizen','A member of a political community.'],['Legislature','A body that makes laws.'],['Monarchy','A government headed by a monarch.'],['Archaeology','Study of the past through material remains.'],['Cause','A reason an event happened.'],['Effect','A result of an event.'],['Historical perspective','Understanding events in their time and context.']],
+'Computer Science':[['Algorithm','A clear sequence of steps to solve a problem.'],['Loop','Instructions repeated by a program.'],['Variable','A named place to store data.'],['Input','Information supplied to a program.'],['Output','Information a program produces.'],['Debugging','Finding and fixing errors in code.'],['Sequence','Instructions performed in order.'],['Condition','A test that can be true or false.'],['Function','A reusable block of code.'],['Data','Information a computer can process.'],['Binary','A base-2 number system using 0 and 1.'],['Pixel','A tiny element of a digital image.'],['Internet','A global network of connected networks.'],['Browser','Software used to view websites.'],['Encryption','Encoding information to protect it.'],['Password manager','A tool for securely organizing passwords.'],['Phishing','A deceptive attempt to steal information.'],['Bug','An error or unexpected behavior in software.'],['Abstraction','Focusing on important details while hiding complexity.'],['Event','An action or occurrence a program can respond to.']]
+};
+for (const subject of Object.keys(topicsBySubject)) {
+  if (!flashcards[subject]) flashcards[subject] = topicsBySubject[subject].map((topic,i)=>[topic,`Study the key ideas and examples in the ${topic.toLowerCase()} unit.`]).concat(
+    [['Key idea 1',`A core concept from ${subject}.`],['Key idea 2',`A second important idea in ${subject}.`],['Practice prompt',`Explain one example from ${subject} in your own words.`],['Review question',`What is one connection you can make in ${subject}?`],['Vocabulary',`Define an important term from ${subject}.`],['Big picture',`Describe why ${subject} is useful to learn.`],['Study strategy',`Use examples, retrieval, and spaced review for ${subject}.`],['Reflection',`What did you understand best in ${subject}?`],['Next step',`Choose one ${subject} skill to practice again.`],['Explain it',`Teach one ${subject} idea to someone else.`]]);
+}
+let deck=[],deckIndex=0,deckFlipped=false;
+function loadDeck(){deck=(flashcards[$('deckSubject').value]||flashcards.Math).slice();deckIndex=0;deckFlipped=false;renderCard()}
+function renderCard(){if(!deck.length)return;$('cardCount').textContent=`Card ${deckIndex+1} of ${deck.length} · ${$('deckSubject').value}`;$('cardFace').textContent=deckFlipped?deck[deckIndex][1]:deck[deckIndex][0];$('flashcard').style.background=deckFlipped?'var(--soft)':'var(--panel)'}
+function flipCard(){deckFlipped=!deckFlipped;renderCard()}
+function moveCard(step){deckIndex=(deckIndex+step+deck.length)%deck.length;deckFlipped=false;renderCard()}
+function shuffleDeck(){for(let i=deck.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]]}deckIndex=0;deckFlipped=false;renderCard()}
+function updateTopics(){let s=$('subject').value;let opts=['<option value="all">All topics</option>'].concat((topicsBySubject[s]||['General']).map(t=>`<option>${escapeHtml(t)}</option>`));$('topic').innerHTML=opts.join('')}
+let quizItems=[],qi=0,quizScore=0;
+function startQuiz(subject){$('subject').value=subject;showView('learn');startSelected()}
+function startSelected(){let s=$('subject').value,d=$('difficulty').value;let source=bank[s]||extraBanks[s]||bank.Math;quizItems=(source[d]||source.medium||source.easy||bank.Math.medium).slice();if($('topic').value!=='all'){let t=$('topic').value;quizItems=quizItems.concat([[`Quick review: ${t}`,['A topic to explore','A random answer','Nothing to learn'],0,`Review the key vocabulary and examples in ${t}.`]])}quizItems=quizItems.concat(quizItems,quizItems);qi=0;quizScore=0;renderQuestion()}
+function renderQuestion(){let q=quizItems[qi];if(!q){$('quiz').innerHTML=`<div class="feedback good"><h2>Quiz complete! 🎉</h2><p>You earned ${quizScore} points out of ${quizItems.length}.</p></div><button class="primary" onclick="startSelected()">Try again</button>`;scores+=quizScore;put('scores',scores);renderAll();return}
+$('quiz').innerHTML=`<div class="row"><span class="pill">${$('subject').value} · Question ${qi+1}/${quizItems.length}</span><span class="muted" style="text-align:right">${quizScore} points</span></div><div class="progress" style="margin:12px 0"><div style="width:${qi/quizItems.length*100}%"></div></div><h3>${q[0]}</h3><div class="answers">${q[1].map((a,i)=>`<button onclick="answer(${i})">${String.fromCharCode(65+i)}. ${a}</button>`).join('')}</div><div id="answerFeedback"></div>`}
+function answer(i){let q=quizItems[qi],buttons=$('quiz').querySelectorAll('.answers button');buttons.forEach((b,j)=>{b.disabled=true;if(j===q[2])b.classList.add('correct');if(j===i&&i!==q[2])b.classList.add('wrong')});let good=i===q[2];if(good)quizScore+=10;$('answerFeedback').innerHTML=`<div class="feedback ${good?'good':'bad'}">${good?'Correct! +10 points.':'Not quite.'} ${q[3]}</div><button class="primary" onclick="qi++;renderQuestion()">${qi===quizItems.length-1?'See results':'Next question →'}</button>`}
+const keys=['C','⌫','÷','×','7','8','9','−','4','5','6','+','1','2','3','(', '0','.','=',' )'];
+let expr='';function renderCalc(){$('calcDisplay').textContent=expr||'0';$('calcKeys').innerHTML=keys.map(k=>`<button onclick="calcKey('${k}')">${k}</button>`).join('')}
+function calcKey(k){if(k==='C')expr='';else if(k==='⌫')expr=expr.slice(0,-1);else if(k==='='){try{let s=expr.replace(/[×÷]/g,m=>m==='×'?'*':'/').replace(/−/g,'-');if(!/^[0-9+\-*/().\s]+$/.test(s))throw 0;let val=Function('"use strict";return ('+s+')')();if(!Number.isFinite(val))throw 0;expr=String(Math.round(val*1e10)/1e10)}catch{expr='Error'}}else expr+=k;renderCalc()}
+function fractionToDecimal(){let v=$('fraction').value.trim().split('/').map(Number);if(v.length===2&&v.every(Number.isFinite)&&v[1]!==0)$('fractionResult').textContent=(v[0]/v[1]).toString();else $('fractionResult').textContent='Enter a valid fraction like 3/8.'}
+let timerSeconds=1500,timerInterval=null;function setTimer(m){pauseTimer();timerSeconds=m*60;renderTimer()}
+function renderTimer(){$('timerDisplay').textContent=String(Math.floor(timerSeconds/60)).padStart(2,'0')+':'+String(timerSeconds%60).padStart(2,'0')}
+function toggleTimer(){if(timerInterval){pauseTimer();return} $('timerStart').textContent='Pause';timerInterval=setInterval(()=>{timerSeconds--;renderTimer();if(timerSeconds<=0){pauseTimer();study+=25;put('study',study);renderAll();$('timerMessage').textContent='Session complete! Take a short stretch break.'}},1000)}
+function pauseTimer(){if(timerInterval)clearInterval(timerInterval);timerInterval=null;$('timerStart').textContent='Start'}
+function resetTimer(){pauseTimer();timerSeconds=1500;renderTimer()}
+function toggleTheme(){document.body.classList.toggle('dark');put('dark',document.body.classList.contains('dark'))}
+$('themeBtn').onclick=toggleTheme;
+function renderAll(){put('tasks',tasks);put('notes',notes);put('custom',custom);$('studyCount').textContent=study;$('quizCount').textContent=scores;$('greeting').textContent=get('name','').trim()?'Hi '+get('name','').trim()+'!':'Hi there!';$('avatar').textContent=get('avatar','🎓');renderTasks();renderGoals();renderNotes();renderResources();renderCustom();renderTools()}
+$('nameInput').value=get('name','');$('titleInput').value=get('title','LearnSpark Dashboard');$('dashboardTitle').textContent=get('title','LearnSpark Dashboard');$('avatarInput').value=get('avatar','🎓');$('titleInput').addEventListener('change',()=>{let t=$('titleInput').value.trim()||'LearnSpark Dashboard';put('title',t);$('dashboardTitle').textContent=t});$('nameInput').addEventListener('change',()=>{put('name',$('nameInput').value.trim());renderAll()});$('avatarInput').addEventListener('change',()=>{put('avatar',$('avatarInput').value||'🎓');renderAll()});
+$('search').addEventListener('input',()=>{let q=$('search').value.toLowerCase();if(!q)return;let found=tools.find(t=>(t[1]+' '+t[2]).toLowerCase().includes(q));if(found)showView(found[3]);else if(['math','science','english','history'].some(s=>s.includes(q)))showView('learn')});
+function resetApp(){if(confirm('Reset all LearnSpark data saved in this browser?')){Object.keys(localStorage).filter(k=>k.startsWith('ls_')).forEach(k=>localStorage.removeItem(k));location.reload()}}
+function updateClock(){let now=new Date(),fmt=get('clockFormat','12');$('dashClock').textContent=now.toLocaleTimeString([], {hour:'numeric',minute:'2-digit',second:'2-digit',hour12:fmt==='12'});$('dashDate').textContent=now.toLocaleDateString([], {weekday:'long',month:'short',day:'numeric'})}
+setInterval(updateClock,1000);updateClock();
+function applyCustomization(){let c=get('accent','#4f46e5');document.documentElement.style.setProperty('--brand',c);document.documentElement.style.setProperty('--user-font',get('fontSize','15')+'px');$('hero')?.classList.remove('minimal','sunrise');let hero=document.querySelector('.hero');if(hero)hero.classList.add(get('dashboardStyle','gradient'));let greet=get('customGreeting','');if(greet)$('greeting').textContent=greet}
+function saveCustomization(){put('accent',$('accentColor').value);put('fontSize',$('fontSize').value);put('clockFormat',$('clockFormat').value);put('customGreeting',$('customGreeting').value.trim());put('dashboardStyle',$('dashboardStyle').value);applyCustomization();updateClock();alert('Your LearnSpark look is saved!')}
+function resetCustomization(){['accent','fontSize','clockFormat','customGreeting','dashboardStyle'].forEach(k=>localStorage.removeItem('ls_'+k));location.reload()}
+$('accentColor').value=get('accent','#4f46e5');$('fontSize').value=get('fontSize','15');$('clockFormat').value=get('clockFormat','12');$('customGreeting').value=get('customGreeting','');$('dashboardStyle').value=get('dashboardStyle','gradient');applyCustomization();
+if(get('dark',false))document.body.classList.add('dark');renderTools();renderResources();renderCalc();renderTimer();renderAll();
+updateTopics();loadDeck();
+// Real AI tutor: the browser calls a separate Cloudflare Worker.
+// After you publish the Worker, paste its URL into SPARK_AI_ENDPOINT below.
+const SPARK_AI_ENDPOINT = "https://spark-ai.haseebsiddiquiahmed.workers.dev";
+const SPARK_SYSTEM_NOTE = "Spark is a friendly, concise middle-school study tutor. Answer the student's actual question directly, including simple inputs such as a number or arithmetic question. Explain clearly at an age-appropriate level and show steps when useful. Do not repeat disclaimers or claim to be a limited answer library. For requests to cheat on a test or submit work dishonestly, say: Sorry, I can't help you with that. Then offer to teach the concept or practice a similar problem. For ordinary homework help, guide the student and explain. Keep most replies brief, use examples, and ask one useful follow-up only when needed. Never ask for passwords, addresses, or other private information.";
+let sparkBusy = false;
+
+function addSparkMessage(text, who) {
+  const box = $('sparkMessages');
+  const el = document.createElement('div');
+  el.className = 'sparkmsg ' + who;
+  const label = document.createElement('strong');
+  label.textContent = who === 'user' ? 'You' : 'Spark';
+  const body = document.createElement('div');
+  body.textContent = text;
+  el.append(label, body);
+  box.appendChild(el);
+  box.scrollTop = box.scrollHeight;
+}
+function readSparkHistory() {
+  try {
+    return JSON.parse(localStorage.getItem('learnspark_spark_chat') || '[]').slice(-12);
+  } catch {
+    return [];
+  }
+}
+function saveSparkHistory(history) {
+  localStorage.setItem('learnspark_spark_chat', JSON.stringify(history.slice(-12)));
+}
+async function sparkSend(text) {
+  text = (text || '').trim();
+  if (!text || sparkBusy) return;
+  if (text.length > 1200) {
+    addSparkMessage('Please shorten that question to 1,200 characters or fewer.', 'bot');
+    return;
+  }
+  if (!SPARK_AI_ENDPOINT.startsWith('https://')) {
+    addSparkMessage('Spark is almost ready! The secure AI Worker still needs to be published and its URL added to this file. No need to rebuild your dashboard.', 'bot');
+    return;
+  }
+
+  const history = readSparkHistory();
+  history.push({ text, reply: '' });
+  addSparkMessage(text, 'user');
+  const waiting = document.createElement('div');
+  waiting.className = 'sparkmsg bot';
+  waiting.textContent = 'Spark is thinking…';
+  waiting.id = 'sparkWaiting';
+  $('sparkMessages').appendChild(waiting);
+  $('sparkMessages').scrollTop = $('sparkMessages').scrollHeight;
+  sparkBusy = true;
+  const sendButton = $('sparkForm').querySelector('button[type="submit"]');
+  if (sendButton) { sendButton.disabled = true; sendButton.textContent = 'Thinking…'; }
+
+  try {
+    // This payload matches the Cloudflare Worker: { message, history }.
+    // Send only earlier turns as history; the latest question is sent separately.
+    const previousTurns = history.slice(0, -1).slice(-8);
+    const workerHistory = [];
+    for (const item of previousTurns) {
+      workerHistory.push({ role: 'user', content: item.text });
+      if (item.reply) workerHistory.push({ role: 'assistant', content: item.reply });
+    }
+    const response = await fetch(SPARK_AI_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text, history: workerHistory })
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.response || data.error || 'The tutor is temporarily unavailable.');
+    const answer = String(data.response || '').trim();
+    if (!answer) throw new Error('Spark returned an empty reply. Please try again.');
+    $('sparkWaiting')?.remove();
+    addSparkMessage(answer, 'bot');
+    history[history.length - 1].reply = answer;
+    saveSparkHistory(history);
+  } catch (error) {
+    $('sparkWaiting')?.remove();
+    addSparkMessage(error.message || 'I could not connect just now. Please try again in a moment.', 'bot');
+  } finally {
+    sparkBusy = false;
+    if (sendButton) { sendButton.disabled = false; sendButton.textContent = 'Send ↗'; }
+  }
+}
+function sparkQuick(q) { sparkSend(q); }
+function clearSparkChat() {
+  localStorage.removeItem('learnspark_spark_chat');
+  $('sparkMessages').innerHTML = '';
+  addSparkMessage('Chat cleared. What would you like to study?', 'bot');
+}
+$('sparkForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const input = $('sparkInput');
+  sparkSend(input.value);
+  input.value = '';
+});
+function restoreSparkChat() {
+  const history = readSparkHistory();
+  if (history.length) {
+    $('sparkMessages').innerHTML = '';
+    history.forEach(item => {
+      addSparkMessage(item.text, 'user');
+      if (item.reply) addSparkMessage(item.reply, 'bot');
+    });
+  }
+}
+restoreSparkChat();
+
+
+// Student Tools add-on (namespaced so it won't conflict with LearnSpark's existing tools)
+let stTimeLeft = 25 * 60;
+let stTimerInterval = null;
+function stRenderTimer(){const m=String(Math.floor(stTimeLeft/60)).padStart(2,'0');const sec=String(stTimeLeft%60).padStart(2,'0');document.getElementById('stTimerDisplay').textContent=m+':'+sec;}
+function stStartTimer(){if(stTimerInterval)return;stTimerInterval=setInterval(()=>{if(stTimeLeft>0){stTimeLeft--;stRenderTimer()}else{stPauseTimer();alert('Study session complete! Take a short break.')}},1000)}
+function stPauseTimer(){clearInterval(stTimerInterval);stTimerInterval=null}
+function stResetTimer(){stPauseTimer();stTimeLeft=25*60;stRenderTimer()}
+function stAddCourse(){const row=document.querySelector('.st-course-row').cloneNode(true);row.querySelector('input[type="text"]').value='';row.querySelector('.st-credits').value='3';document.getElementById('stCourses').appendChild(row)}
+function stCalculateGPA(){const grades=[...document.querySelectorAll('.st-grade')];const credits=[...document.querySelectorAll('.st-credits')];let points=0,total=0;grades.forEach((g,i)=>{const c=Math.max(0,Number(credits[i].value)||0);points+=Number(g.value)*c;total+=c});document.getElementById('stGpaResult').textContent='GPA: '+(total?(points/total).toFixed(2):'0.00')}
+function stReadTasks(){try{return JSON.parse(localStorage.getItem('learnspark_student_tasks')||'[]')}catch{return []}}
+function stSaveTasks(tasks){localStorage.setItem('learnspark_student_tasks',JSON.stringify(tasks));stRenderTasks()}
+function stRenderTasks(){const list=document.getElementById('stTaskList');list.replaceChildren();stReadTasks().forEach((task,index)=>{const row=document.createElement('div');row.className='student-task'+(task.done?' completed':'');const label=document.createElement('button');label.type='button';label.className='secondary task-label';label.textContent=task.text;label.onclick=()=>{const tasks=stReadTasks();tasks[index].done=!tasks[index].done;stSaveTasks(tasks)};const remove=document.createElement('button');remove.type='button';remove.className='secondary';remove.textContent='Remove';remove.onclick=()=>{const tasks=stReadTasks();tasks.splice(index,1);stSaveTasks(tasks)};row.append(label,remove);list.appendChild(row)})}
+function stAddTask(){const input=document.getElementById('stTaskInput');const text=input.value.trim();if(!text)return;const tasks=stReadTasks();tasks.push({text,done:false});stSaveTasks(tasks);input.value=''}
+document.getElementById('stTaskInput').addEventListener('keydown',e=>{if(e.key==='Enter')stAddTask()});
+stRenderTimer();stRenderTasks();
+
+</script>
+</body></html>
